@@ -1,0 +1,81 @@
+Sentence
+Types:
+declarative
+
+interrogative
+
+imperative
+
+exclamative
+**
+Other types:
+conjunctions - and, but, or
+
+simple - no conjuctions
+
+compound - two statements that are connected by a conjuction
+
+complex - dependent clause, and at least one independent clause
+
+compound/complex - at least one dependent clause, and more than 1 independent clause
+**
+
+More types
+**
+S - Subject - Noun, Pronoun (I, you, he, she, it, we, they), NounPhrase
+V - Verb - (action, or state)
+O - Object - recieves an action, or on what an action is applied (noun, pronoun, or noun phrase) follows only action verbs not necessary that action verbs follow an object
+C - Complement - (noun, or adjective)
+A - Adjunct/Adverbial - Describes When, Where, and How (time, place, and manner)
+**
+
+Seven basic sentence or clause patterns
+SV - e.g. John laughed
+SVO - e.g. John kissed Jane
+SVC - e.g. John is tall
+SVOO - e.g. John gave Jane a present
+SVOC - e.g. John made Jane angry
+SVA - e.g. John sat up
+SVOA - John put the bag down
+
+**
+Components of a sentence
+S - Subject
+V - Verb
+O - Object
+C - Complement
+A - Adverbial
+DO - Direct Object
+IO - Indirect Object
+**
+
+Other sentence or clause patterns
+SV - Subject + Verb
+SVO - Subject + Verb + Object (e.g. I like puppies)
+SVIODO - Subject + Verb + Inderect Object + DirectObject (e.g. the principle gave him the medal)
+SVC - Subject + Verb + Complement (They are players)
+SVOC - Subject + Verb + Object + Complement
+SVA - Subect + Verb + Adverbial (e.g. He came to the party)
+ASV - Adverbial + Subject + Verb (e.g. Soon we wake up)
+SVOC - Subject + Verb + Object + Complement (e.g. They made him captain)
+SVOCA - Subject + Verb + Object + Complement + Adverbial (e.g. She made her views clear at the outset)
+SVOA - Subject + Verb + Object + Adverbial (e.g. The boy kicks the ball with force)
+SVOAA - Subject + Verb + Object + Adverbial + Adverbial (e.g. I met Sarah at the theatre yesterday)
+SVCA - Subject + Verb + Complement + Adverbial (e.g. The child fell asleep soon
+ASVO - Adverbial + Subject + Verb + Object
+ASVIODO - Adverbial + Subject + Verb + Indirect Object + Direct Object + Direct Object (e.g. Last night she gave him food)
+ASVOCA - Adverbial + Subect + Verb + Object + Complement + Adverbial (e.g. In the end the judge declared the culprit innocent after the trial)
+AASVC - Adverbial + Adverbial + Subject + Verb + Complement (e.g. In the prayer hall, during worship they are silent)
+VO - Verb + Object (e.g. call him)
+
+
+
+
+
+
+
+
+
+
+
+
