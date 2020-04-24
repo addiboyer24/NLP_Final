@@ -129,11 +129,28 @@ sentence: subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
 	subjectPhrase verbPhrase complementPhrase{ // SVC, e.g. her mom is so nice
 		std::cout << "subjectPhrase verbPhrase complementPhrase" << std::endl;
 	}
+	|
+	subjectPhrase verbPhrase complementPhrase adverbialPhrase{ // SVCA, e.g. her mom is so nice lately
+		std::cout << "subjectPhrase verbPhrase complementPhrase adverbialPhrase" << std::endl;
+	}
+	|
+	adverbialPhrase subjectPhrase verbPhrase objectPhrase{ // ASVO e.g. lately i love cheese
+		std::cout << "adverbialPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
+	}
+	|
+	adverbialPhrase adverbialPhrase subjectPhrase verbPhrase complementPhrase{ // AASVC, i.e. 
+		std::cout << "adverbialPhrase adverbialPhrase subjectPhrase verbPhrase complementPhrase" << std::endl;
+	}
 	/*
+	|
+	subjectPhrase verbPhrase complementPhrase adverbialPhrase{ // SVCA e.g. the girl gets drunk fast
+		std::cout << "subjectPhrase verbPhrase complementPhrase adverbialPhrase" << std::endl;
+	}
 	|
 	subjectPhrase verbPhrase objectPhrase adverbialPhrase{ // SVOA e.g. john advertises a job well
 		std::cout << "subjectPhrase verbPhrase objectPhrase adverbialPhrase" << std::endl;
-	}*/
+	}
+	*/
 	
 // S: Subject
 subjectPhrase: PRONOUN{
@@ -162,6 +179,10 @@ nounPhrase: nounPhrase NOUN{
 	|
 	ARTICLE{
 		std::cout << "ARTICLE" << std::endl;
+	}
+	|
+	PREPOSITION{
+		std::cout << "PREPOSITION" << std::endl;
 	}
 
 // V: Verb
@@ -244,6 +265,11 @@ adjectivePhrase: adjectivePhrase ADJECTIVE{
 adverbialPhrase: ADVERB{
 	std::cout << "ADVERB" << std::endl;
 }
+	|
+	/*
+	ADVERB ADJECTIVENOUN{
+		std::cout << "ADVERB ADJECTIVENOUN" << std::endl;
+	}*/
 	/*|
 	adverbPhrase{
 		std::cout << "adverbPhrase" << std::endl;
