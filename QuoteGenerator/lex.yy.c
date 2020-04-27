@@ -887,7 +887,7 @@ YY_RULE_SETUP
                                     return ADJECTIVENOUN;
                                 }
                                 else if(isAdverb && isNoun){
-                                    std::cout << "ADVERB NOUN" << std::endl;
+                                    std::cout << "ADVERBNOUN" << std::endl;
                                     std::cout << yytext << std::endl;
                                     return ADVERBNOUN;
                                 }
