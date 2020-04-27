@@ -60,6 +60,7 @@ std::map<char*, int, StrCompare> var_to_int;
 %token VERB;
 %token PREPOSITION;
 %token ARTICLE;
+%token CONJUNCTION;
 
 
 /*** Define return type for grammar rules ***/
@@ -75,6 +76,8 @@ std::map<char*, int, StrCompare> var_to_int;
 %type<sVal> complementPhrase;
 %type<sVal> adjectivePhrase;
 %type<sVal> nounPhrase;
+%type<sVal> simple;
+//%type<sVal> compound;
 
 %type<sVal> PUNCTUATION;
 %type<sVal> COMMA;
@@ -89,20 +92,30 @@ std::map<char*, int, StrCompare> var_to_int;
 %type<sVal> NOUNVERB;
 %type<sVal> PREPOSITION;
 %type<sVal> ARTICLE;
+%type<sVal> CONJUNCTION;
 
 %%
 
 
 quote: sentence EOL {
-	//std::cout << "sentence EOL quote" << std::endl;
+	std::cout << "sentence EOL quote" << std::endl;
 			 } quote
 
 	 | /* NULL */
 	 ;
 
-// S: Subject, V: Verb, O: Object, A: Adverb, C: Complement
 
-sentence: subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
+
+sentence: simple{
+	std::cout << "simple" << std::endl;
+}
+	/*|
+	compound{
+		std::cout << "compound" << std::endl;
+	}*/
+|
+// S: Subject, V: Verb, O: Object, A: Adverb, C: Complement
+subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
 	std::cout << "subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
 	|
@@ -138,10 +151,20 @@ sentence: subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
 		std::cout << "adverbialPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
 	}
 	|
+	subjectPhrase verbPhrase objectPhrase complementPhrase{ // SVOC e.g. John made jane angry
+		std::cout << "subjectPhrase verbPhrase objectPhrase complementPhrase" << std::endl;
+	}
+	/*
+	|
+	subjectPhrase verbPhrase objectPhrase complementPhrase subjectPhrase{ // SVOCA e.g. she made her opinion known at the beginning
+		std::cout << "subjectPhrase verbPhrase objectPhrase complementPhrase adverbialPhrase" << std::endl;
+	}
+	
+	|
 	adverbialPhrase adverbialPhrase subjectPhrase verbPhrase complementPhrase{ // AASVC, i.e. 
 		std::cout << "adverbialPhrase adverbialPhrase subjectPhrase verbPhrase complementPhrase" << std::endl;
 	}
-	/*
+	
 	|
 	subjectPhrase verbPhrase complementPhrase adverbialPhrase{ // SVCA e.g. the girl gets drunk fast
 		std::cout << "subjectPhrase verbPhrase complementPhrase adverbialPhrase" << std::endl;
@@ -151,6 +174,11 @@ sentence: subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
 		std::cout << "subjectPhrase verbPhrase objectPhrase adverbialPhrase" << std::endl;
 	}
 	*/
+
+// Simple, Compound, Complex, Compound / Complex
+simple: sentence PUNCTUATION{
+	std::cout << "sentence PUNCTUATION" << std::endl;
+}
 	
 // S: Subject
 subjectPhrase: PRONOUN{
@@ -171,6 +199,10 @@ nounPhrase: nounPhrase NOUN{
 	|
 	nounPhrase ADJECTIVENOUN{
 		std::cout << "nounPhrase ADJECTIVENOUN" << std::endl;
+	}
+	|
+	nounPhrase ARTICLE{
+		std::cout << "nounPhrase ARTICLE" << std::endl;
 	}
 	|
 	NOUN{
@@ -214,6 +246,10 @@ objectPhrase: ARTICLE NOUN{
 	PRONOUN{
 		std::cout << "PRONOUN" << std::endl;
 	}
+	/*|
+	PRONOUN NOUN{
+		std::cout << "PRONOUN NOUN" << std::endl;
+	}*/
 	|
 	NOUNVERB{
 		std::cout << "NOUNVERB" << std::endl;
@@ -265,8 +301,8 @@ adjectivePhrase: adjectivePhrase ADJECTIVE{
 adverbialPhrase: ADVERB{
 	std::cout << "ADVERB" << std::endl;
 }
-	|
-	/*
+	/*|
+	
 	ADVERB ADJECTIVENOUN{
 		std::cout << "ADVERB ADJECTIVENOUN" << std::endl;
 	}*/

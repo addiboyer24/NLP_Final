@@ -41,6 +41,9 @@ std::vector<std::string> pronouns = {"anyone","anything","everyone","everything"
 // Lookup table for contractions
 std::vector<std::string> contractions = {"'tis","'twas","ain't","aren't","can't","couldn't","didn't","doesn't","don't","hasn't","he'd","he'll","he's","how's","i'd","i'll","i'm","i've","isn't","it's","she'll","she's","should've","shouldn't","that'll","that's","there's","they'd","they'll","they're","they've","wasn't","we'd","we'll","we're","what's","when","where's","who'll","who's","won't","wouldn't","you'd","you'll","you're","you've"};
 
+// Lookup tables for conjunctions
+std::vector<std::string> conjunctions = {"and","but","for","nor","or","yet"};
+
 // Implementation of binary search for std::vector as lookup tables are sorted :)
 bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToCheck){
 
@@ -105,6 +108,9 @@ bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToChe
                                 // articles first..
                                 bool isArticle = existsInVector(articles, yytext);
 
+                                // then conjunctions..
+                                bool isConjunction = existsInVector(conjunctions, yytext);
+
                                 // then pronouns..
                                 bool isPronoun = existsInVector(pronouns, yytext);
 
@@ -134,6 +140,11 @@ bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToChe
                                     std::cout << "ARTICLE" << std::endl;
                                     std::cout << yytext << std::endl;
                                     return ARTICLE;
+                                }
+                                else if(isConjunction){
+                                    std::cout << "CONJUNCTION" << std::endl;
+                                    std::cout << yytext << std::endl;
+                                    return CONJUNCTION;
                                 }
                                 else if(isPronoun){
                                     std::cout << "PRONOUN" << std::endl;
