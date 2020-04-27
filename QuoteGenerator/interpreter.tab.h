@@ -59,7 +59,8 @@ extern int yydebug;
     VERB = 269,
     PREPOSITION = 270,
     ARTICLE = 271,
-    CONJUNCTION = 272
+    CONJUNCTION = 272,
+    ADVERBNOUN = 273
   };
 #endif
 
@@ -68,14 +69,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 39 "interpreter.y" /* yacc.c:1909  */
+#line 46 "interpreter.y" /* yacc.c:1909  */
 
 
 	int iVal;
 	char* sVal;
 	
 
-#line 79 "interpreter.tab.h" /* yacc.c:1909  */
+#line 80 "interpreter.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

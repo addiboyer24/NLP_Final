@@ -161,6 +161,11 @@ bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToChe
                                     std::cout << yytext << std::endl;
                                     return ADJECTIVENOUN;
                                 }
+                                else if(isAdverb && isNoun){
+                                    std::cout << "ADVERB NOUN" << std::endl;
+                                    std::cout << yytext << std::endl;
+                                    return ADVERBNOUN;
+                                }
                                 else if(isAdjective && isVerb){
                                     std::cout << "ADJECTIVEVERB" << std::endl;
                                     std::cout << yytext << std::endl;

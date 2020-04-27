@@ -886,6 +886,11 @@ YY_RULE_SETUP
                                     std::cout << yytext << std::endl;
                                     return ADJECTIVENOUN;
                                 }
+                                else if(isAdverb && isNoun){
+                                    std::cout << "ADVERB NOUN" << std::endl;
+                                    std::cout << yytext << std::endl;
+                                    return ADVERBNOUN;
+                                }
                                 else if(isAdjective && isVerb){
                                     std::cout << "ADJECTIVEVERB" << std::endl;
                                     std::cout << yytext << std::endl;
@@ -929,10 +934,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 206 "interpreter.l"
+#line 211 "interpreter.l"
 ECHO;
 	YY_BREAK
-#line 1030 "lex.yy.c"
+#line 1035 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1937,6 +1942,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 206 "interpreter.l"
+#line 211 "interpreter.l"
 
 
