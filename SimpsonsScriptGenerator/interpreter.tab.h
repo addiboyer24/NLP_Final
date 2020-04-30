@@ -60,7 +60,8 @@ extern int yydebug;
     PREPOSITION = 270,
     ARTICLE = 271,
     CONJUNCTION = 272,
-    ADVERBNOUN = 273
+    ADVERBNOUN = 273,
+    CHARACTER = 274
   };
 #endif
 
@@ -76,7 +77,7 @@ union YYSTYPE
 	char* sVal;
 	
 
-#line 80 "interpreter.tab.h" /* yacc.c:1909  */
+#line 81 "interpreter.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

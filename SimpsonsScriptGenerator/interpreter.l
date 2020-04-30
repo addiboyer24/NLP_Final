@@ -118,7 +118,9 @@ bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToChe
 %%
 
 
-[\n]                        {yylineno++; return EOL;}
+[\n]                       {yylineno++; return EOL;}
+
+[\|][A-Z \-\#0-9a-z]+[\|]       {yylval.sVal = strdup(yytext); std::cout << "CHARACTER" << std::endl; return CHARACTER; }
 
 ","                        {yylval.sVal = strdup(yytext); return COMMA; }
 
