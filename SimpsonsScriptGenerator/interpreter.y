@@ -70,14 +70,14 @@ std::map<char*, int, StrCompare> var_to_int;
 %token CONJUNCTION;
 %token ADVERBNOUN;
 %token CHARACTER;
+%token QWORD;
+%token ADJECTIVENOUNVERB;
 
 
 /*** Define return type for grammar rules ***/
 
 %type<sVal> sentence;
-//%type<sVal> word;
 %type<sVal> sentencePart;
-//%type<sVal> wordCommaSequence;
 %type<sVal> subjectPhrase;
 %type<sVal> verbPhrase;
 %type<sVal> objectPhrase;
@@ -88,6 +88,9 @@ std::map<char*, int, StrCompare> var_to_int;
 %type<sVal> simple;
 %type<sVal> compound;
 %type<sVal> adverbPhrase;
+//%type<sVal> questionPhrase;
+%type<sVal> verbClause;
+%type<sVal> objectNounClause;
 
 %type<sVal> PUNCTUATION;
 %type<sVal> COMMA;
@@ -104,6 +107,7 @@ std::map<char*, int, StrCompare> var_to_int;
 %type<sVal> ARTICLE;
 %type<sVal> CONJUNCTION;
 %type<sVal> ADVERBNOUN;
+%type<sVal> ADJECTIVENOUNVERB;
 
 %%
 
@@ -115,11 +119,11 @@ quote: sentence EOL {
 	 | /* NULL */
 	 ;
 
-sentence: /*CHARACTER*/ simple{
+sentence: CHARACTER simple{
 	std::cout << "CHARACTER simple" << std::endl;
 }
 	|
-	/*CHARACTER*/ compound{
+	CHARACTER compound{
 		std::cout << "CHARACTER compound" << std::endl;
 	}
 	|
@@ -225,6 +229,15 @@ sentencePart: subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
 	verbPhrase objectPhrase objectPhrase{
 		std::cout << "verbPhrase objectPhrase objectPhrase" << std::endl;
 	}
+	|
+	subjectPhrase verbPhrase complementPhrase objectPhrase{ // SVCO e.g. she makes good pie.
+		std::cout << "subjectPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
+	}
+	|
+	subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase{ // SVAOV i.e. I wonder how he died. 
+		std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase" << std::endl;
+	}
+
 	/* 
 	|
 	subjectPhrase complementPhrase verbPhrase objectPhrase{
@@ -281,6 +294,10 @@ nounPhrase: nounPhrase NOUN{
 		std::cout << "nounPhrase COMMA NOUN" << std::endl;
 	}
 	|
+	nounPhrase COMMA PRONOUN{
+		std::cout << "nounPhrase COMMA PRONOUN" << std::endl;
+	}
+	|
 	nounPhrase ARTICLE{
 		std::cout << "nounPhrase ARTICLE" << std::endl;
 	}
@@ -296,6 +313,7 @@ nounPhrase: nounPhrase NOUN{
 	PREPOSITION{
 		std::cout << "PREPOSITION" << std::endl;
 	}
+	
 
 // V: Verb
 verbPhrase: VERB{
@@ -309,10 +327,10 @@ verbPhrase: VERB{
 	NOUNVERB{
 		std::cout << "NOUNVERB" << std::endl;
 	}
-	|
+	/*|
 	ADJECTIVEVERB{
 		std::cout << "ADJECTIVEVERB" << std::endl;
-	}
+	}*/
 	/*|
 	CONTRACTION{
 		std::cout << "CONTRACTION" << std::endl;
@@ -325,16 +343,38 @@ verbPhrase: VERB{
 	CONTRACTION NOUNVERB{
 		std::cout << "CONTRACTION NOUNVERB" << std::endl;
 	}
+	|
+	verbClause{
+		std::cout << "verbClause" << std::endl;
+	}
+	/*|
+	ADJECTIVENOUNVERB{
+		std::cout << "ADJECTIVENOUNVERB" << std::endl;
+	}*/
+	|
+	NOUNVERB CONTRACTION ADJECTIVENOUN{
+		std::cout << "NOUNVERB CONTRACTION ADJECTIVENOUN" << std::endl;
+	}
+	|
+	ADJECTIVENOUNVERB NOUNVERB VERB{
+		std::cout << "ADJECTIVENOUNVERB NOUNVERB VERB" << std::endl;
+	}
+
+verbClause: VERB VERB{
+	std::cout << "VERB VERB" << std::endl;
+}
+
+	
 	
 // O: Object
 objectPhrase: ARTICLE NOUN{
 	std::cout << "NOUN" << std::endl;
 }
-	/*|
-	ARTICLE ADJECTIVENOUN{
-		std::cout << "ARTICLE ADJECTIVENOUN" << std::endl;
-	}*/
 	|
+	/*ARTICLE ADJECTIVENOUN{
+		std::cout << "ARTICLE ADJECTIVENOUN" << std::endl;
+	}
+	|*/
 	ARTICLE ADJECTIVENOUN NOUNVERB{
 		std::cout << "ARTICLE ADJECTIVENOUN NOUNVERB" << std::endl;
 	}
@@ -350,21 +390,9 @@ objectPhrase: ARTICLE NOUN{
 	ARTICLE ADVERBNOUN{
 		std::cout << "ARTICLE ADVERBNOUN" << std::endl;
 	}
-	/*|
-	PRONOUN{
-		std::cout << "PRONOUN" << std::endl;
-	}*/
-	|
-	PRONOUN NOUN{
-		std::cout << "PRONOUN NOUN" << std::endl;
-	}
 	|
 	NOUNVERB{
 		std::cout << "NOUNVERB" << std::endl;
-	}
-	|
-	NOUN{
-		std::cout << "NOUN" << std::endl;
 	}
 	|
 	PREPOSITION NOUN{
@@ -382,23 +410,35 @@ objectPhrase: ARTICLE NOUN{
 	PREPOSITION NOUNVERB{
 		std::cout << "PREPOSITION NOUNVERB" << std::endl;
 	}
-	/*|
-	nounPhrase{
-		std::cout << "nounPhrase" << std::endl;
-	}*/
+	|
+	objectNounClause{
+		std::cout << "objectNounClause" << std::endl;
+	}
+
+objectNounClause: objectNounClause NOUN{
+	std::cout << "objectNounClause NOUN" << std::endl;
+}
+	|
+	PRONOUN{
+		std::cout << "PRONOUN" << std::endl;
+	}
+	|
+	ARTICLE ADJECTIVENOUNVERB{
+		std::cout << "ARTICLE ADJECTIVENOUNVERB" << std::endl;
+	}
 
 // C: Complement
-complementPhrase: ADJECTIVENOUN{
+complementPhrase: /*ADJECTIVENOUN{
 		std::cout << "ADJECTIVENOUN" << std::endl;
 	}
 	|
+	ADJECTIVENOUN NOUN ADJECTIVE{
+		std::cout << "ADJECTIVENOUN NOUN ADJECTIVE" << std::endl;
+	}
+	|*/
 	ADVERB ADJECTIVE{
 		std::cout << "ADVERB ADJECTIVE" << std::endl; // e.g. so cute
 	}
-	/*|
-	ADVERB ADJECTIVENOUN{
-		std::cout << "ADVERB ADJECTIVENOUN" << std::endl; // e.g. so nice
-	}*/
 	|
 	ADJECTIVEVERB{
 		std::cout << "ADJECTIVEVERB" << std::endl;
@@ -419,6 +459,11 @@ adjectivePhrase: adjectivePhrase ADJECTIVE{
 	ADJECTIVE{
 		std::cout << "ADJECTIVE" << std::endl;
 	}
+	|
+	ADJECTIVENOUN{
+		std::cout << "ADJECTIVENOUN" << std::endl;
+	}
+	
 	
 
 // A: Adjunct / Adverbial

@@ -61,7 +61,9 @@ extern int yydebug;
     ARTICLE = 271,
     CONJUNCTION = 272,
     ADVERBNOUN = 273,
-    CHARACTER = 274
+    CHARACTER = 274,
+    QWORD = 275,
+    ADJECTIVENOUNVERB = 276
   };
 #endif
 
@@ -77,7 +79,7 @@ union YYSTYPE
 	char* sVal;
 	
 
-#line 81 "interpreter.tab.h" /* yacc.c:1909  */
+#line 83 "interpreter.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -372,16 +372,16 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    3,    4,    1,    3,    1,    1,    1,    5,    1,
-        1,    1,    1,    6,    3,    4,    1,    3,    3,    3,
+        1,    1,    1,    6,    3,    7,    1,    3,    3,    3,
         3,    3,    3,    3,    3,    3,    3,    1,    1,    1,
-        1,    1,    4,    1,    7,    7,    7,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-        5,    5,    5,    5,    5,    5,    7,    7,    7,    7,
+        1,    1,    4,    1,    5,    5,    5,    5,    5,    5,
+        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
+        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
+        8,    8,    8,    8,    8,    8,    5,    5,    5,    5,
 
-        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-        7,    7,    1,    8,    1,    1,    1,    1,    1,    1,
+        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
+        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
+        5,    5,    1,    9,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -398,15 +398,15 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[9] =
+static const YY_CHAR yy_meta[10] =
     {   0,
-        1,    1,    2,    1,    3,    1,    4,    1
+        1,    1,    2,    1,    3,    1,    2,    4,    1
     } ;
 
 static const flex_int16_t yy_base[16] =
     {   0,
-        0,    0,   14,   15,   15,   15,    0,   15,    0,    0,
-        4,   15,   15,    6,    9
+        0,    0,   15,   16,   16,   16,    0,   16,    0,    0,
+        5,   16,   16,    7,   10
     } ;
 
 static const flex_int16_t yy_def[16] =
@@ -415,18 +415,18 @@ static const flex_int16_t yy_def[16] =
        15,   13,    0,   13,   13
     } ;
 
-static const flex_int16_t yy_nxt[24] =
+static const flex_int16_t yy_nxt[26] =
     {   0,
-        4,    5,    4,    6,    7,    8,    7,    9,   10,   10,
-       11,   12,   11,   13,    3,   13,   13,   13,   13,   13,
-       13,   13,   13
+        4,    5,    4,    6,    7,    8,    6,    7,    9,   10,
+       10,   11,   11,   12,   13,    3,   13,   13,   13,   13,
+       13,   13,   13,   13,   13
     } ;
 
-static const flex_int16_t yy_chk[24] =
+static const flex_int16_t yy_chk[26] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,   14,   14,
-       15,   11,   15,    3,   13,   13,   13,   13,   13,   13,
-       13,   13,   13
+        1,    1,    1,    1,    1,    1,    1,    1,    1,   14,
+       14,   15,   15,   11,    3,   13,   13,   13,   13,   13,
+       13,   13,   13,   13,   13
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -809,7 +809,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 15 );
+		while ( yy_base[yy_current_state] != 16 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -909,6 +909,11 @@ YY_RULE_SETUP
                                     std::cout << yytext << std::endl;
                                     return CONTRACTION;
                                 }
+                                else if (isAdjective && isNoun && isVerb){
+                                    std::cout << "ADJECTIVENOUNVERB" << std::endl;
+                                    std::cout << yytext << std::endl;
+                                    return ADJECTIVENOUNVERB;
+                                }
                                 else if(isAdjective && isNoun){
                                     std::cout << "ADJECTIVENOUN" << std::endl;
                                     std::cout << yytext << std::endl;
@@ -962,10 +967,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 233 "interpreter.l"
+#line 238 "interpreter.l"
 ECHO;
 	YY_BREAK
-#line 970 "lex.yy.c"
+#line 975 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1970,6 +1975,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 233 "interpreter.l"
+#line 238 "interpreter.l"
 
 

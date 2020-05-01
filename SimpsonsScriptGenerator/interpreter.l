@@ -120,7 +120,7 @@ bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToChe
 
 [\n]                       {yylineno++; return EOL;}
 
-[\|][A-Z \-\#0-9a-z]+[\|]       {yylval.sVal = strdup(yytext); std::cout << "CHARACTER" << std::endl; return CHARACTER; }
+[\|][A-Z \-\#0-9a-z\'\.]+[\|]       {yylval.sVal = strdup(yytext); std::cout << "CHARACTER" << std::endl; return CHARACTER; }
 
 ","                        {yylval.sVal = strdup(yytext); return COMMA; }
 
@@ -177,6 +177,11 @@ bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToChe
                                     std::cout << "CONTRACTION" << std::endl;
                                     std::cout << yytext << std::endl;
                                     return CONTRACTION;
+                                }
+                                else if (isAdjective && isNoun && isVerb){
+                                    std::cout << "ADJECTIVENOUNVERB" << std::endl;
+                                    std::cout << yytext << std::endl;
+                                    return ADJECTIVENOUNVERB;
                                 }
                                 else if(isAdjective && isNoun){
                                     std::cout << "ADJECTIVENOUN" << std::endl;
