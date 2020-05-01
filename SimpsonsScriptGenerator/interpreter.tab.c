@@ -423,16 +423,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  23
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   188
+#define YYLAST   173
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  22
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  17
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  79
+#define YYNRULES  80
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  118
+#define YYNSTATES  114
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -483,11 +483,12 @@ static const yytype_uint16 yyrline[] =
        0,   115,   115,   115,   119,   122,   126,   130,   136,   140,
      144,   149,   153,   157,   161,   165,   169,   173,   177,   181,
      185,   189,   193,   197,   201,   205,   209,   213,   217,   221,
-     225,   229,   233,   237,   273,   277,   281,   285,   289,   293,
-     297,   301,   305,   309,   313,   319,   327,   339,   343,   347,
-     355,   359,   363,   370,   378,   382,   386,   390,   394,   398,
-     402,   406,   410,   414,   418,   422,   426,   439,   443,   447,
-     451,   455,   459,   463,   470,   474,   478,   482,   491,   495
+     225,   229,   233,   237,   241,   277,   281,   285,   289,   293,
+     297,   301,   305,   309,   313,   317,   323,   327,   331,   335,
+     339,   343,   347,   358,   366,   370,   374,   378,   386,   390,
+     394,   398,   402,   406,   410,   414,   427,   431,   435,   439,
+     443,   447,   451,   455,   462,   466,   470,   474,   478,   487,
+     491
 };
 #endif
 
@@ -518,12 +519,12 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -37
+#define YYPACT_NINF -31
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-37)))
+  (!!((Yystate) == (-31)))
 
-#define YYTABLE_NINF -59
+#define YYTABLE_NINF -1
 
 #define yytable_value_is_error(Yytable_value) \
   0
@@ -532,18 +533,18 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     -12,    94,     2,    17,    47,   -37,    26,    -4,    54,    51,
-      -1,   -37,   -37,    55,   -37,   -37,    29,   156,    53,   130,
-     -37,   119,   -37,   -37,   -37,   -37,   -37,   -37,   -37,    65,
-     -37,   -37,   -37,    61,   -37,    68,    78,   110,    14,   -37,
-     -37,   -37,   -37,   -37,   -37,    80,   -37,   -37,   162,     5,
-     110,    88,    66,    33,   -37,   156,   141,   -12,   -37,   -37,
-      94,    94,    42,    46,    81,   149,   168,   -37,   -37,   -37,
-     -37,   -37,   -37,   -37,    87,    98,   -37,   -37,   -37,   -37,
-     -37,   -37,   -37,   -37,   156,   -37,   -37,   149,   156,    66,
-     -37,   -37,    97,   -37,    38,   168,   -37,   -37,   -37,   -37,
-     -37,   156,   -37,   -37,   168,   -37,   -37,   168,   156,   179,
-     -37,   -37,   -37,   168,     4,   -37,    -1,   -37
+       8,    99,    36,     3,    31,   -31,    33,   -31,   -31,   -31,
+      16,   -31,   -31,   -31,   -31,   -31,    15,   156,   119,    38,
+     159,   137,   -31,   -31,   -31,   -31,   -31,   -31,   -31,   -31,
+      40,    43,    38,     6,   -31,   -31,   -31,   -31,   -31,   -31,
+      17,   -31,   112,    -3,    38,    48,   144,     5,   -31,   -31,
+     -31,   -31,   -31,   156,   130,     8,    99,    99,    86,    69,
+      60,   -31,   -31,   -31,   -31,   -31,   -31,   -31,    52,    53,
+     -31,   -31,   -31,   -31,   -31,   -31,   -31,   -31,   156,   -31,
+     -31,   -31,    69,    63,   156,   144,   -31,   -31,    70,   -31,
+      60,   -31,   -31,   -31,   -31,   -31,   151,   156,   -31,   -31,
+      60,   -31,   -31,    60,   156,   125,   -31,   -31,   -31,    60,
+      46,   -31,    16,   -31
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -551,81 +552,79 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       4,     7,     0,     0,    74,    42,    34,     0,    46,    45,
-      44,    43,    75,     0,     5,     6,     0,     0,    36,     0,
-      49,     0,    78,     1,     2,    79,    35,    48,    47,     0,
-      52,    76,    77,     0,     8,     0,     0,    12,     0,    38,
-      37,    41,    72,    73,    68,     0,    65,    58,     0,     0,
-      15,    63,    25,    69,    44,     0,     0,     4,    50,    51,
-       0,     0,    74,     0,    11,    17,    13,    39,    40,    67,
-      59,    61,    62,    60,     0,     0,    53,    56,    57,    66,
-      31,    29,    30,    64,     0,    70,    71,     0,     0,     0,
-       3,     9,     0,    10,    46,     0,    14,    20,    22,    32,
-      18,    21,    55,    54,     0,    19,    16,     0,     0,    23,
-      33,    27,    26,     0,     0,    28,     0,    24
+       4,     7,     0,     0,    74,    43,    35,    51,    52,    50,
+      45,    44,    75,    78,     5,     6,     0,     0,    37,     0,
+      46,     0,    79,     1,     2,    80,    36,    76,    77,     8,
+       0,     0,    12,     0,    39,    38,    42,    72,    73,    67,
+      74,    64,     0,     0,    15,    62,    25,    68,    34,    49,
+      48,    47,    45,     0,     0,     4,     0,     0,    11,    17,
+      13,    40,    41,    66,    58,    60,    61,    59,     0,     0,
+      53,    56,    57,    65,    31,    29,    30,    63,     0,    69,
+      70,    71,     0,     0,     0,     0,     3,     9,     0,    10,
+       0,    14,    20,    22,    32,    18,     0,    21,    55,    54,
+       0,    19,    16,     0,     0,    23,    33,    27,    26,     0,
+       0,    28,     0,    24
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -37,    56,   -37,   -37,   -16,   -37,   113,   -15,   -37,   -17,
-     -37,   -34,   -37,   -29,   -37,   -36,   -37
+     -31,    22,   -31,   -31,    -6,   -31,    82,   -13,   -31,   -16,
+     -31,   -30,   -31,   -23,   -31,   -19,   -31
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,    57,     3,    14,    15,    92,    17,    18,    19,
-      20,    50,    51,    52,    53,    21,    22
+      -1,     2,    55,     3,    14,    15,    88,    17,    18,    19,
+      20,    44,    45,    46,    47,    21,    22
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
      positive, shift that token.  If negative, reduce the rule whose
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
-static const yytype_int8 yytable[] =
+static const yytype_uint8 yytable[] =
 {
-      37,    66,    23,    64,    56,    31,    55,     1,    65,    27,
-      28,    74,    75,     4,    82,    76,    80,    32,    77,   116,
-      24,    81,    12,    78,    67,    68,    79,    89,    98,   100,
-      96,    99,   101,    34,    35,    97,    26,    84,    87,    85,
-      86,    88,   -58,   -58,    91,    93,    36,    95,    69,    25,
-      29,   106,    31,   105,    25,   -58,    70,    71,    38,    72,
-      39,   109,    73,    40,    32,    30,    29,   104,    33,    41,
-     111,   107,    58,   112,   108,    59,     5,     6,   117,   115,
-     114,    54,    11,    61,   110,    60,    69,    42,    43,    44,
-      62,   113,    46,     7,    94,     9,    63,    49,    83,    12,
-     102,    34,    13,     4,     5,     6,     7,     8,     9,    10,
-      11,   103,    12,    90,    16,    13,    42,    43,    44,    62,
-       0,    46,     0,    47,     0,    63,    49,     0,    12,     5,
-       6,     7,     8,     9,    54,    11,    42,    43,    44,    45,
-      13,    46,     0,    47,     0,    48,    49,    42,    43,    44,
-      45,     5,     6,     0,     0,     0,    54,    11,     4,     0,
-      46,     0,    47,     0,    63,    49,     0,    12,     7,     8,
-       9,     0,    70,    71,     0,    72,     0,    13,    73,    46,
-       0,    47,     0,    48,    49,    42,    43,    44,    45
+      48,    32,    58,    68,    69,    54,    24,    70,    53,    59,
+      71,    79,    80,    60,    74,    72,    61,    62,    73,    29,
+      30,    75,    27,    63,    25,    76,    81,     1,    91,    94,
+      97,    85,    31,    78,    28,    92,    23,    82,    25,    93,
+      95,    84,    90,    26,    37,    38,    39,    40,    57,    41,
+      87,    89,   101,    42,    43,     4,    12,    56,    77,    13,
+     105,   112,   100,   102,    12,    98,    99,    13,   103,    63,
+     107,    41,   104,   108,    29,    96,    43,    86,     4,   111,
+      41,   106,   110,    16,    42,    43,     0,    12,   109,     0,
+      13,   113,    37,    38,    39,    40,     0,    41,     7,     8,
+       9,    42,    43,     0,    12,     0,     0,    13,     4,     5,
+       6,     7,     8,     9,    10,    11,     0,    12,    27,     0,
+      13,     0,    64,    65,    33,    66,    34,     0,    67,    35,
+      28,    37,    38,    39,    83,    36,    37,    38,    39,    83,
+       5,     6,     0,     0,     0,    52,    11,     5,     6,     7,
+       8,     9,    52,    11,     5,     6,     0,     0,     0,    52,
+      11,    64,    65,     0,    66,     0,     0,    67,     7,     8,
+       9,    49,    50,    51
 };
 
 static const yytype_int8 yycheck[] =
 {
-      17,    37,     0,    37,    21,     6,    21,    19,    37,    13,
-      14,     6,     7,     9,    50,    10,    50,    18,    13,    15,
-       3,    50,    18,    18,    10,    11,    21,    56,    64,    65,
-      64,    65,    66,     4,     5,    64,    10,    52,    55,     6,
-       7,    56,     4,     5,    60,    61,    17,    64,     6,     7,
-      12,    87,     6,    87,     7,    17,    10,    11,     5,    13,
-       7,    95,    16,    10,    18,    14,    12,    84,    13,    16,
-     104,    88,     7,   107,    89,    14,    10,    11,   114,   113,
-     109,    15,    16,     5,   101,    17,     6,     6,     7,     8,
-       9,   108,    11,    12,    13,    14,    15,    16,    10,    18,
-      13,     4,    21,     9,    10,    11,    12,    13,    14,    15,
-      16,    13,    18,    57,     1,    21,     6,     7,     8,     9,
-      -1,    11,    -1,    13,    -1,    15,    16,    -1,    18,    10,
-      11,    12,    13,    14,    15,    16,     6,     7,     8,     9,
-      21,    11,    -1,    13,    -1,    15,    16,     6,     7,     8,
-       9,    10,    11,    -1,    -1,    -1,    15,    16,     9,    -1,
-      11,    -1,    13,    -1,    15,    16,    -1,    18,    12,    13,
-      14,    -1,    10,    11,    -1,    13,    -1,    21,    16,    11,
-      -1,    13,    -1,    15,    16,     6,     7,     8,     9
+      19,    17,    32,     6,     7,    21,     3,    10,    21,    32,
+      13,     6,     7,    32,    44,    18,    10,    11,    21,     4,
+       5,    44,     6,     6,     7,    44,    21,    19,    58,    59,
+      60,    54,    17,    46,    18,    58,     0,    53,     7,    58,
+      59,    54,    58,    10,     6,     7,     8,     9,     5,    11,
+      56,    57,    82,    15,    16,     9,    18,    17,    10,    21,
+      90,    15,    78,    82,    18,    13,    13,    21,    84,     6,
+     100,    11,    85,   103,     4,    15,    16,    55,     9,   109,
+      11,    97,   105,     1,    15,    16,    -1,    18,   104,    -1,
+      21,   110,     6,     7,     8,     9,    -1,    11,    12,    13,
+      14,    15,    16,    -1,    18,    -1,    -1,    21,     9,    10,
+      11,    12,    13,    14,    15,    16,    -1,    18,     6,    -1,
+      21,    -1,    10,    11,     5,    13,     7,    -1,    16,    10,
+      18,     6,     7,     8,     9,    16,     6,     7,     8,     9,
+      10,    11,    -1,    -1,    -1,    15,    16,    10,    11,    12,
+      13,    14,    15,    16,    10,    11,    -1,    -1,    -1,    15,
+      16,    10,    11,    -1,    13,    -1,    -1,    16,    12,    13,
+      14,    12,    13,    14
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -634,16 +633,16 @@ static const yytype_uint8 yystos[] =
 {
        0,    19,    23,    25,     9,    10,    11,    12,    13,    14,
       15,    16,    18,    21,    26,    27,    28,    29,    30,    31,
-      32,    37,    38,     0,     3,     7,    10,    13,    14,    12,
-      14,     6,    18,    13,     4,     5,    17,    31,     5,     7,
-      10,    16,     6,     7,     8,     9,    11,    13,    15,    16,
-      33,    34,    35,    36,    15,    29,    31,    24,     7,    14,
-      17,     5,     9,    15,    33,    35,    37,    10,    11,     6,
-      10,    11,    13,    16,     6,     7,    10,    13,    18,    21,
-      33,    35,    37,    10,    29,     6,     7,    31,    29,    35,
-      23,    26,    28,    26,    13,    31,    33,    35,    37,    33,
-      37,    33,    13,    13,    31,    33,    37,    31,    29,    33,
-      31,    33,    33,    31,    35,    33,    15,    37
+      32,    37,    38,     0,     3,     7,    10,     6,    18,     4,
+       5,    17,    31,     5,     7,    10,    16,     6,     7,     8,
+       9,    11,    15,    16,    33,    34,    35,    36,    37,    12,
+      13,    14,    15,    29,    31,    24,    17,     5,    33,    35,
+      37,    10,    11,     6,    10,    11,    13,    16,     6,     7,
+      10,    13,    18,    21,    33,    35,    37,    10,    29,     6,
+       7,    21,    31,     9,    29,    35,    23,    26,    28,    26,
+      31,    33,    35,    37,    33,    37,    15,    33,    13,    13,
+      31,    33,    37,    31,    29,    33,    31,    33,    33,    31,
+      35,    33,    15,    37
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -652,11 +651,12 @@ static const yytype_uint8 yyr1[] =
        0,    22,    24,    23,    23,    25,    25,    25,    26,    27,
       27,    28,    28,    28,    28,    28,    28,    28,    28,    28,
       28,    28,    28,    28,    28,    28,    28,    28,    28,    28,
-      28,    28,    28,    28,    29,    29,    29,    30,    30,    30,
-      30,    30,    30,    30,    30,    31,    31,    31,    31,    31,
-      31,    31,    32,    33,    33,    33,    33,    33,    33,    33,
-      33,    33,    33,    33,    34,    34,    34,    35,    35,    35,
-      36,    36,    36,    36,    37,    37,    37,    37,    37,    38
+      28,    28,    28,    28,    28,    29,    29,    29,    30,    30,
+      30,    30,    30,    30,    30,    30,    31,    32,    32,    32,
+      32,    32,    32,    33,    33,    33,    33,    33,    33,    33,
+      33,    33,    33,    34,    34,    34,    35,    35,    35,    36,
+      36,    36,    36,    36,    37,    37,    37,    37,    37,    37,
+      38
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -665,11 +665,12 @@ static const yytype_uint8 yyr2[] =
        0,     2,     0,     4,     0,     2,     2,     1,     2,     4,
        4,     3,     2,     3,     4,     2,     4,     3,     4,     4,
        4,     4,     4,     5,     7,     2,     5,     5,     6,     3,
-       3,     3,     4,     5,     1,     2,     1,     2,     2,     3,
-       3,     2,     1,     1,     1,     1,     1,     2,     2,     1,
-       3,     3,     2,     2,     3,     3,     2,     2,     1,     2,
-       2,     2,     2,     1,     2,     1,     2,     2,     1,     1,
-       2,     2,     1,     1,     1,     1,     2,     2,     1,     2
+       3,     3,     4,     5,     2,     1,     2,     1,     2,     2,
+       3,     3,     2,     1,     1,     1,     1,     2,     2,     2,
+       1,     1,     1,     2,     3,     3,     2,     2,     2,     2,
+       2,     2,     1,     2,     1,     2,     2,     1,     1,     2,
+       2,     2,     1,     1,     1,     1,     2,     2,     1,     1,
+       2
 };
 
 
@@ -1350,7 +1351,7 @@ yyreduce:
     {
 	std::cout << "sentence EOL quote" << std::endl;
 			 }
-#line 1354 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1355 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
@@ -1358,7 +1359,7 @@ yyreduce:
     {
 	std::cout << "CHARACTER simple" << std::endl;
 }
-#line 1362 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1363 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
@@ -1366,7 +1367,7 @@ yyreduce:
     {
 		std::cout << "CHARACTER compound" << std::endl;
 	}
-#line 1370 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1371 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
@@ -1375,7 +1376,7 @@ yyreduce:
 		std::cout << "CHARACTER" << std::endl;
 		// Generate a sentence..
 	}
-#line 1379 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1380 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
@@ -1383,7 +1384,7 @@ yyreduce:
     {
 	std::cout << "sentencePart PUNCTUATION" << std::endl;
 }
-#line 1387 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1388 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
@@ -1391,7 +1392,7 @@ yyreduce:
     { // e.g. she loves cheese, but i love pie
 	std::cout << "sentencePart COMMA CONJUNCTION simple" << std::endl;
 }
-#line 1395 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1396 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
@@ -1399,7 +1400,7 @@ yyreduce:
     { // e.g. 
 		std::cout << "sentencePart CONJUNCTION COMMA simple" << std::endl;
 	}
-#line 1403 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1404 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
@@ -1407,7 +1408,7 @@ yyreduce:
     { // SVO, e.g. I love cheese
 	std::cout << "subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1411 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1412 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
@@ -1415,7 +1416,7 @@ yyreduce:
     { // SV e.g. john conspired
 		std::cout << "subjectPhrase verbPhrase" << std::endl;
 	}
-#line 1419 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1420 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
@@ -1423,7 +1424,7 @@ yyreduce:
     { // SVA e.g. john conspired shamefully
 		std::cout << "subjectPhrase verbPhrase adverbialPhrase" << std::endl;
 	}
-#line 1427 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1428 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
@@ -1431,7 +1432,7 @@ yyreduce:
     { // SVOO e.g. John gave Jane a present, john made a cup of tea
 		std::cout << "subjectPhrase verbPhrase objectPhrase objectPhrase" << std::endl;
 	}
-#line 1435 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1436 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
@@ -1439,7 +1440,7 @@ yyreduce:
     { // VO, e.g. call him
 		std::cout << "verbPhrase objectPhrase" << std::endl;
 	}
-#line 1443 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1444 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
@@ -1447,7 +1448,7 @@ yyreduce:
     { // ASVA e.g. soon we wake up
 		std::cout << "adverbialPhrase subjectPhrase verbPhrase adverbialPhrase" << std::endl;
 	}
-#line 1451 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1452 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
@@ -1455,7 +1456,7 @@ yyreduce:
     { // SVC, e.g. her mom is so nice
 		std::cout << "subjectPhrase verbPhrase complementPhrase" << std::endl;
 	}
-#line 1459 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1460 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
@@ -1463,7 +1464,7 @@ yyreduce:
     { // SVCA, e.g. her mom is so nice lately
 		std::cout << "subjectPhrase verbPhrase complementPhrase adverbialPhrase" << std::endl;
 	}
-#line 1467 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1468 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
@@ -1471,7 +1472,7 @@ yyreduce:
     { // ASVO e.g. lately i love cheese
 		std::cout << "adverbialPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
 	}
-#line 1475 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1476 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
@@ -1479,7 +1480,7 @@ yyreduce:
     { // SVOC e.g. John made jane angry
 		std::cout << "subjectPhrase verbPhrase objectPhrase complementPhrase" << std::endl;
 	}
-#line 1483 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1484 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
@@ -1487,7 +1488,7 @@ yyreduce:
     { // SVAO e.g. She went up the stairs
 		std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase" << std::endl;
 	}
-#line 1491 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1492 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
@@ -1495,7 +1496,7 @@ yyreduce:
     { // SVOA e.g. it was a little of both
 		std::cout << "subjectPhrase verbPhrase objectPhrase adverbialPhrase" << std::endl;
 	}
-#line 1499 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1500 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
@@ -1503,7 +1504,7 @@ yyreduce:
     { // SVOVO e.g. you think you have it
 		std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1507 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1508 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
@@ -1511,7 +1512,7 @@ yyreduce:
     { // SVOVOCA e.g. I don't think there's anything left to say
 		std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase complementPhrase adverbialPhrase" << std::endl;
 	}
-#line 1515 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1516 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
@@ -1519,7 +1520,7 @@ yyreduce:
     { // VC e.g. it's only natural
 		std::cout << "verbPhrase complementPhrase" << std::endl;
 	}
-#line 1523 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1524 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
@@ -1527,7 +1528,7 @@ yyreduce:
     { // AVSVO e.g. what did he teach you?
 		std::cout << "adverbialPhrase verbPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1531 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1532 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
@@ -1535,7 +1536,7 @@ yyreduce:
     { // VCSVO e.g. I'd sure like to talk to him
 		std::cout << "verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1539 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1540 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
@@ -1543,7 +1544,7 @@ yyreduce:
     { // VCSVO e.g. Although I'd sure like to talk to him
 		std::cout << "adverbialPhrase verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1547 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1548 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
@@ -1551,7 +1552,7 @@ yyreduce:
     { // VOC e.g. are you stupid?
 		std::cout << "verbPhrase objectPhrase complementPhrase" << std::endl;
 	}
-#line 1555 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1556 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
@@ -1559,7 +1560,7 @@ yyreduce:
     {
 		std::cout << "verbPhrase objectPhrase adverbialPhrase" << std::endl;
 	}
-#line 1563 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1564 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
@@ -1567,7 +1568,7 @@ yyreduce:
     {
 		std::cout << "verbPhrase objectPhrase objectPhrase" << std::endl;
 	}
-#line 1571 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1572 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
@@ -1575,7 +1576,7 @@ yyreduce:
     { // SVCO e.g. she makes good pie.
 		std::cout << "subjectPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
 	}
-#line 1579 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1580 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
@@ -1583,379 +1584,387 @@ yyreduce:
     { // SVAOV i.e. I wonder how he died. 
 		std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase" << std::endl;
 	}
-#line 1587 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1588 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 273 "interpreter.y" /* yacc.c:1646  */
-    {
-	std::cout << "PRONOUN" << std::endl;
-}
-#line 1595 "interpreter.tab.c" /* yacc.c:1646  */
+#line 241 "interpreter.y" /* yacc.c:1646  */
+    { // e.g. sit down ( you subject is implied)
+		std::cout << "verbPhrase adverbialPhrase" << std::endl;
+	}
+#line 1596 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 277 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "PRONOUN NOUN" << std::endl;
-	}
-#line 1603 "interpreter.tab.c" /* yacc.c:1646  */
+	std::cout << "PRONOUN" << std::endl;
+}
+#line 1604 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
 #line 281 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "nounPhrase" << std::endl;
+		std::cout << "PRONOUN NOUN" << std::endl;
 	}
-#line 1611 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1612 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
 #line 285 "interpreter.y" /* yacc.c:1646  */
     {
-	std::cout << "nounPhrase NOUN" << std::endl;
-}
-#line 1619 "interpreter.tab.c" /* yacc.c:1646  */
+		std::cout << "nounPhrase" << std::endl;
+	}
+#line 1620 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
 #line 289 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "nounPhrase ADJECTIVENOUN" << std::endl;
-	}
-#line 1627 "interpreter.tab.c" /* yacc.c:1646  */
+	std::cout << "nounPhrase NOUN" << std::endl;
+}
+#line 1628 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
 #line 293 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "nounPhrase COMMA NOUN" << std::endl;
+		std::cout << "nounPhrase ADJECTIVENOUN" << std::endl;
 	}
-#line 1635 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1636 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
 #line 297 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "nounPhrase COMMA PRONOUN" << std::endl;
+		std::cout << "nounPhrase COMMA NOUN" << std::endl;
 	}
-#line 1643 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1644 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
 #line 301 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "nounPhrase ARTICLE" << std::endl;
+		std::cout << "nounPhrase COMMA PRONOUN" << std::endl;
 	}
-#line 1651 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1652 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
 #line 305 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "NOUN" << std::endl;
+		std::cout << "nounPhrase ARTICLE" << std::endl;
 	}
-#line 1659 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1660 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
 #line 309 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "ARTICLE" << std::endl;
+		std::cout << "NOUN" << std::endl;
 	}
-#line 1667 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1668 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
 #line 313 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "PREPOSITION" << std::endl;
+		std::cout << "ARTICLE" << std::endl;
 	}
-#line 1675 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1676 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 319 "interpreter.y" /* yacc.c:1646  */
+#line 317 "interpreter.y" /* yacc.c:1646  */
     {
-	std::cout << "VERB" << std::endl;
-}
-#line 1683 "interpreter.tab.c" /* yacc.c:1646  */
+		std::cout << "PREPOSITION" << std::endl;
+	}
+#line 1684 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 327 "interpreter.y" /* yacc.c:1646  */
+#line 323 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "NOUNVERB" << std::endl;
-	}
-#line 1691 "interpreter.tab.c" /* yacc.c:1646  */
+	std::cout << "verbClause" << std::endl;
+}
+#line 1692 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 339 "interpreter.y" /* yacc.c:1646  */
+#line 327 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "CONTRACTION VERB" << std::endl;
-	}
-#line 1699 "interpreter.tab.c" /* yacc.c:1646  */
+	std::cout << "verbClause VERB" << std::endl;
+}
+#line 1700 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 343 "interpreter.y" /* yacc.c:1646  */
+#line 331 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "CONTRACTION NOUNVERB" << std::endl;
+		std::cout << "verbClause NOUNVERB" << std::endl;
 	}
-#line 1707 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1708 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 347 "interpreter.y" /* yacc.c:1646  */
+#line 335 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "verbClause" << std::endl;
+		std::cout << "verbClause CONTRACTION" << std::endl;
 	}
-#line 1715 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1716 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 355 "interpreter.y" /* yacc.c:1646  */
+#line 339 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "NOUNVERB CONTRACTION ADJECTIVENOUN" << std::endl;
+		std::cout << "VERB" << std::endl;
 	}
-#line 1723 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1724 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 359 "interpreter.y" /* yacc.c:1646  */
+#line 343 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "ADJECTIVENOUNVERB NOUNVERB VERB" << std::endl;
+		std::cout << "CONTRACTION" << std::endl;
 	}
-#line 1731 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1732 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 363 "interpreter.y" /* yacc.c:1646  */
-    {
-	std::cout << "VERB VERB" << std::endl;
-}
-#line 1739 "interpreter.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 53:
-#line 370 "interpreter.y" /* yacc.c:1646  */
-    {
-	std::cout << "NOUN" << std::endl;
-}
-#line 1747 "interpreter.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 54:
-#line 378 "interpreter.y" /* yacc.c:1646  */
-    {
-		std::cout << "ARTICLE ADJECTIVENOUN NOUNVERB" << std::endl;
-	}
-#line 1755 "interpreter.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 55:
-#line 382 "interpreter.y" /* yacc.c:1646  */
-    {
-		std::cout << "ARTICLE ADJECTIVE NOUNVERB" << std::endl;
-	}
-#line 1763 "interpreter.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 56:
-#line 386 "interpreter.y" /* yacc.c:1646  */
-    {
-		std::cout << "ARTICLE NOUNVERB" << std::endl; 
-	}
-#line 1771 "interpreter.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 57:
-#line 390 "interpreter.y" /* yacc.c:1646  */
-    {
-		std::cout << "ARTICLE ADVERBNOUN" << std::endl;
-	}
-#line 1779 "interpreter.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 58:
-#line 394 "interpreter.y" /* yacc.c:1646  */
+#line 347 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "NOUNVERB" << std::endl;
 	}
-#line 1787 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1740 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 59:
-#line 398 "interpreter.y" /* yacc.c:1646  */
+  case 53:
+#line 358 "interpreter.y" /* yacc.c:1646  */
+    {
+	std::cout << "NOUN" << std::endl;
+}
+#line 1748 "interpreter.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 54:
+#line 366 "interpreter.y" /* yacc.c:1646  */
+    {
+		std::cout << "ARTICLE ADJECTIVENOUN NOUNVERB" << std::endl;
+	}
+#line 1756 "interpreter.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 55:
+#line 370 "interpreter.y" /* yacc.c:1646  */
+    {
+		std::cout << "ARTICLE ADJECTIVE NOUNVERB" << std::endl;
+	}
+#line 1764 "interpreter.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 56:
+#line 374 "interpreter.y" /* yacc.c:1646  */
+    {
+		std::cout << "ARTICLE NOUNVERB" << std::endl; 
+	}
+#line 1772 "interpreter.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 57:
+#line 378 "interpreter.y" /* yacc.c:1646  */
+    {
+		std::cout << "ARTICLE ADVERBNOUN" << std::endl;
+	}
+#line 1780 "interpreter.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 58:
+#line 386 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "PREPOSITION NOUN" << std::endl;
 	}
-#line 1795 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1788 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 60:
-#line 402 "interpreter.y" /* yacc.c:1646  */
+  case 59:
+#line 390 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "PREPOSITION ARTICLE" << std::endl;
 	}
-#line 1803 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1796 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 61:
-#line 406 "interpreter.y" /* yacc.c:1646  */
+  case 60:
+#line 394 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "PREPOSITION PRONOUN" << std::endl;
 	}
-#line 1811 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1804 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 62:
-#line 410 "interpreter.y" /* yacc.c:1646  */
+  case 61:
+#line 398 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "PREPOSITION NOUNVERB" << std::endl;
 	}
-#line 1819 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1812 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 63:
-#line 414 "interpreter.y" /* yacc.c:1646  */
+  case 62:
+#line 402 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "objectNounClause" << std::endl;
 	}
-#line 1827 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1820 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 64:
-#line 418 "interpreter.y" /* yacc.c:1646  */
+  case 63:
+#line 406 "interpreter.y" /* yacc.c:1646  */
     {
 	std::cout << "objectNounClause NOUN" << std::endl;
 }
-#line 1835 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1828 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 65:
-#line 422 "interpreter.y" /* yacc.c:1646  */
+  case 64:
+#line 410 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "PRONOUN" << std::endl;
 	}
-#line 1843 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1836 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 66:
-#line 426 "interpreter.y" /* yacc.c:1646  */
+  case 65:
+#line 414 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "ARTICLE ADJECTIVENOUNVERB" << std::endl;
 	}
-#line 1851 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1844 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 67:
-#line 439 "interpreter.y" /* yacc.c:1646  */
+  case 66:
+#line 427 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "ADVERB ADJECTIVE" << std::endl; // e.g. so cute
 	}
-#line 1859 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1852 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 68:
-#line 443 "interpreter.y" /* yacc.c:1646  */
+  case 67:
+#line 431 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "ADJECTIVEVERB" << std::endl;
 	}
-#line 1867 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1860 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 69:
-#line 447 "interpreter.y" /* yacc.c:1646  */
+  case 68:
+#line 435 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "adjectivePhrase" << std::endl;
 	}
-#line 1875 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1868 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 70:
-#line 451 "interpreter.y" /* yacc.c:1646  */
+  case 69:
+#line 439 "interpreter.y" /* yacc.c:1646  */
     {
 	std::cout << "adjectivePhrase ADJECTIVE" << std::endl;
 }
-#line 1883 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1876 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
-  case 71:
-#line 455 "interpreter.y" /* yacc.c:1646  */
+  case 70:
+#line 443 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "adjectivePhrase ADJECTIVENOUN" << std::endl;
 	}
-#line 1891 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1884 "interpreter.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 71:
+#line 447 "interpreter.y" /* yacc.c:1646  */
+    {
+		std::cout << "adjectivePhrase ADJECTIVENOUNVERB" << std::endl;
+	}
+#line 1892 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 459 "interpreter.y" /* yacc.c:1646  */
+#line 451 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "ADJECTIVE" << std::endl;
 	}
-#line 1899 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1900 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 463 "interpreter.y" /* yacc.c:1646  */
+#line 455 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "ADJECTIVENOUN" << std::endl;
 	}
-#line 1907 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1908 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 470 "interpreter.y" /* yacc.c:1646  */
+#line 462 "interpreter.y" /* yacc.c:1646  */
     {
 	std::cout << "ADVERB" << std::endl;
 }
-#line 1915 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1916 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 474 "interpreter.y" /* yacc.c:1646  */
+#line 466 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "ADVERBNOUN" << std::endl;
 	}
-#line 1923 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1924 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 478 "interpreter.y" /* yacc.c:1646  */
+#line 470 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "PREPOSITION ADJECTIVE" << std::endl;
 	}
-#line 1931 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1932 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 482 "interpreter.y" /* yacc.c:1646  */
+#line 474 "interpreter.y" /* yacc.c:1646  */
     {
 		std::cout << "PREPOSITION ADVERBNOUN" << std::endl;
 	}
-#line 1939 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1940 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 491 "interpreter.y" /* yacc.c:1646  */
+#line 478 "interpreter.y" /* yacc.c:1646  */
     {
-		std::cout << "adverbPhrase" << std::endl;
+		std::cout << "ADJECTIVENOUNVERB" << std::endl;
 	}
-#line 1947 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1948 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 495 "interpreter.y" /* yacc.c:1646  */
+#line 487 "interpreter.y" /* yacc.c:1646  */
+    {
+		std::cout << "adverbPhrase" << std::endl;
+	}
+#line 1956 "interpreter.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 80:
+#line 491 "interpreter.y" /* yacc.c:1646  */
     {
 	std::cout << "ADVERB ADJECTIVENOUN" << std::endl;
 }
-#line 1955 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1964 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1959 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1968 "interpreter.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2183,7 +2192,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 503 "interpreter.y" /* yacc.c:1906  */
+#line 499 "interpreter.y" /* yacc.c:1906  */
 
 
 int main(int argc, char **argv) {

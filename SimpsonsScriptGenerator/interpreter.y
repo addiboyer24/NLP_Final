@@ -237,6 +237,10 @@ sentencePart: subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
 	subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase{ // SVAOV i.e. I wonder how he died. 
 		std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase" << std::endl;
 	}
+	|
+	verbPhrase adverbialPhrase{ // e.g. sit down ( you subject is implied)
+		std::cout << "verbPhrase adverbialPhrase" << std::endl;
+	}
 
 	/* 
 	|
@@ -316,53 +320,37 @@ nounPhrase: nounPhrase NOUN{
 	
 
 // V: Verb
-verbPhrase: VERB{
-	std::cout << "VERB" << std::endl;
+verbPhrase: verbClause{
+	std::cout << "verbClause" << std::endl;
 }
-	/*|
-	VERB ARTICLE{
-		std::cout << "VERB ARTICLE" << std::endl;
-	}*/
+
+verbClause: verbClause VERB{
+	std::cout << "verbClause VERB" << std::endl;
+}
+	|
+	verbClause NOUNVERB{
+		std::cout << "verbClause NOUNVERB" << std::endl;
+	}
+	|
+	verbClause CONTRACTION{
+		std::cout << "verbClause CONTRACTION" << std::endl;
+	}
+	|
+	VERB{
+		std::cout << "VERB" << std::endl;
+	}
+	|
+	CONTRACTION{
+		std::cout << "CONTRACTION" << std::endl;
+	}
 	|
 	NOUNVERB{
 		std::cout << "NOUNVERB" << std::endl;
 	}
 	/*|
-	ADJECTIVEVERB{
-		std::cout << "ADJECTIVEVERB" << std::endl;
-	}*/
-	/*|
-	CONTRACTION{
-		std::cout << "CONTRACTION" << std::endl;
-	}*/
-	|
-	CONTRACTION VERB{
-		std::cout << "CONTRACTION VERB" << std::endl;
-	}
-	|
-	CONTRACTION NOUNVERB{
-		std::cout << "CONTRACTION NOUNVERB" << std::endl;
-	}
-	|
-	verbClause{
-		std::cout << "verbClause" << std::endl;
-	}
-	/*|
 	ADJECTIVENOUNVERB{
 		std::cout << "ADJECTIVENOUNVERB" << std::endl;
 	}*/
-	|
-	NOUNVERB CONTRACTION ADJECTIVENOUN{
-		std::cout << "NOUNVERB CONTRACTION ADJECTIVENOUN" << std::endl;
-	}
-	|
-	ADJECTIVENOUNVERB NOUNVERB VERB{
-		std::cout << "ADJECTIVENOUNVERB NOUNVERB VERB" << std::endl;
-	}
-
-verbClause: VERB VERB{
-	std::cout << "VERB VERB" << std::endl;
-}
 
 	
 	
@@ -390,10 +378,10 @@ objectPhrase: ARTICLE NOUN{
 	ARTICLE ADVERBNOUN{
 		std::cout << "ARTICLE ADVERBNOUN" << std::endl;
 	}
-	|
+	/*|
 	NOUNVERB{
 		std::cout << "NOUNVERB" << std::endl;
-	}
+	}*/
 	|
 	PREPOSITION NOUN{
 		std::cout << "PREPOSITION NOUN" << std::endl;
@@ -456,6 +444,10 @@ adjectivePhrase: adjectivePhrase ADJECTIVE{
 		std::cout << "adjectivePhrase ADJECTIVENOUN" << std::endl;
 	}
 	|
+	adjectivePhrase ADJECTIVENOUNVERB{
+		std::cout << "adjectivePhrase ADJECTIVENOUNVERB" << std::endl;
+	}
+	|
 	ADJECTIVE{
 		std::cout << "ADJECTIVE" << std::endl;
 	}
@@ -481,6 +473,10 @@ adverbialPhrase: ADVERB{
 	|
 	PREPOSITION ADVERBNOUN{
 		std::cout << "PREPOSITION ADVERBNOUN" << std::endl;
+	}
+	|
+	ADJECTIVENOUNVERB{
+		std::cout << "ADJECTIVENOUNVERB" << std::endl;
 	}
 	/*|
 	
