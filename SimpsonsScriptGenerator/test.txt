@@ -1,0 +1,911 @@
+bison -d interpreter.y
+flex interpreter.l
+g++ -I -O3 -std=c++11 interpreter.tab.c lex.yy.c -lfl -o interpreter.out
+Welcome to "The Simpsons" Small Talk Generator :)
+Created by: Addison Boyer
+ PRONOUN
+I
+ CONTRACTION
+don't
+ NOUNVERB
+know
+subjectPhrase verbPhrase
+|Miss Hoover|I don't know .
+|Miss Hoover|
+First: I	don't:1,	
+First: don't	know:1,	
+First: know	.:1,	
+ ADVERB
+What
+ VERB
+did
+ PRONOUN
+he
+ NOUNVERB
+teach
+ PRONOUN
+you
+adverbialPhrase verbPhrase subjectPhrase verbPhrase objectPhrase
+|Miss Hoover|What did he teach you .
+|Miss Hoover|
+First: I	don't:1,	
+First: What	did:1,	
+First: did	he:1,	
+First: don't	know:1,	
+First: he	teach:1,	
+First: know	.:1,	
+First: teach	you:1,	
+First: you	.:1,	
+ PRONOUN
+I
+ CONTRACTION
+didn't
+ NOUNVERB
+vote
+subjectPhrase verbPhrase
+|Nelson Muntz|I didn't vote .
+|Nelson Muntz|
+First: I	didn't:1,	
+First: didn't	vote:1,	
+First: vote	.:1,	
+ PRONOUN
+I
+ NOUNVERB
+demand
+ ARTICLE
+a
+ NOUNVERB
+recount
+subjectPhrase verbPhrase objectPhrase
+|Bart Simpson|I demand a recount .
+|Bart Simpson|
+First: I	demand:1,	
+First: a	recount:1,	
+First: demand	a:1,	
+First: recount	.:1,	
+ CONTRACTION
+I'll
+ NOUNVERB
+tell
+ PRONOUN
+you
+ ADVERB
+what
+verbPhrase objectPhrase adverbialPhrase
+|BERGSTROM|I'll tell you what .
+|BERGSTROM|
+First: I'll	tell:1,	
+First: tell	you:1,	
+First: what	.:1,	
+First: you	what:1,	
+ PRONOUN
+I
+ CONTRACTION
+didn't
+ NOUNVERB
+think
+ CONTRACTION
+you'd
+ VERB
+understand
+subjectPhrase verbPhrase
+.I didn't think you'd understand .
+.
+First: I	didn't:1,	
+First: didn't	think:1,	
+First: think	you'd:1,	
+First: understand	.:1,	
+First: you'd	understand:1,	
+ PRONOUN
+You
+ NOUNVERB
+can
+ NOUNVERB
+tell
+ PRONOUN
+me
+subjectPhrase verbPhrase objectPhrase
+|Homer Simpson|You can tell me .
+|Homer Simpson|
+First: You	can:1,	
+First: can	tell:1,	
+First: me	.:1,	
+First: tell	me:1,	
+ VERB
+Gimme
+ ARTICLE
+a
+ NOUN
+banana
+verbPhrase objectPhrase
+|Homer Simpson|Gimme a banana .
+|Homer Simpson|
+First: Gimme	a:1,	
+First: You	can:1,	
+First: a	banana:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: me	.:1,	
+First: tell	me:1,	
+ NOUNVERB
+Think
+ PRONOUN
+nothing
+ PREPOSITION
+of
+ PRONOUN
+it
+verbPhrase objectPhrase objectPhrase
+|Homer Simpson|Think nothing of it .
+|Homer Simpson|
+First: Gimme	a:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: it	.:1,	
+First: me	.:1,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: tell	me:1,	
+ NOUNVERB
+Give
+ PRONOUN
+me
+ ADJECTIVE
+another
+verbPhrase objectPhrase complementPhrase
+|Homer Simpson|Give me another .
+|Homer Simpson|
+First: Gimme	a:1,	
+First: Give	me:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:1,	
+First: another	.:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: it	.:1,	
+First: me	.:2,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: tell	me:1,	
+ CONTRACTION
+It's
+ ADVERB
+really
+ ADJECTIVE
+painful
+verbPhrase complementPhrase
+|Barney Gumble|It's really painful .
+|Barney Gumble|
+First: It's	really:1,	
+First: painful	.:1,	
+First: really	painful:1,	
+ PRONOUN
+It
+ VERB
+was
+ PRONOUN
+me
+subjectPhrase verbPhrase objectPhrase
+|Homer Simpson|It was me .
+|Homer Simpson|
+First: Gimme	a:1,	
+First: Give	me:1,	
+First: It	was:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:1,	
+First: another	.:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: it	.:1,	
+First: me	.:3,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: tell	me:1,	
+First: was	me:1,	
+ PRONOUN
+I
+ VERB
+had
+ ARTICLE
+a
+ ADJECTIVE
+wonderful
+ NOUNVERB
+time
+subjectPhrase verbPhrase objectPhrase
+|Barney Gumble|I had a wonderful time .
+|Barney Gumble|
+First: I	had:1,	
+First: It's	really:1,	
+First: a	wonderful:1,	
+First: had	a:1,	
+First: painful	.:1,	
+First: really	painful:1,	
+First: time	.:1,	
+First: wonderful	time:1,	
+ PRONOUN
+I
+ NOUNVERB
+put
+ PRONOUN
+it
+ ADVERBNOUN
+there
+subjectPhrase verbPhrase objectPhrase adverbialPhrase
+|Homer Simpson|I put it there .
+|Homer Simpson|
+First: Gimme	a:1,	
+First: Give	me:1,	
+First: I	put:1,	
+First: It	was:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:1,	
+First: another	.:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: it	.:2,	
+First: me	.:3,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: put	it:1,	
+First: tell	me:1,	
+First: there	.:1,	
+First: was	me:1,	
+ PRONOUN
+I
+ VERB
+understand
+ ADVERBNOUN
+why
+subjectPhrase verbPhrase adverbialPhrase
+|Bart Simpson|I understand why .
+|Bart Simpson|
+First: I	demand:2,	
+First: a	recount:1,	
+First: demand	a:1,	
+First: recount	.:1,	
+First: understand	why:1,	
+First: why	.:1,	
+ PRONOUN
+You
+ VERB
+were
+ ADJECTIVEVERB
+wasted
+subjectPhrase verbPhrase complementPhrase
+|Bart Simpson|You were wasted .
+|Bart Simpson|
+First: I	demand:2,	
+First: You	were:1,	
+First: a	recount:1,	
+First: demand	a:1,	
+First: recount	.:1,	
+First: understand	why:1,	
+First: wasted	.:1,	
+First: were	wasted:1,	
+First: why	.:1,	
+ PRONOUN
+I
+ VERB
+admit
+ PRONOUN
+it
+subjectPhrase verbPhrase objectPhrase
+|Homer Simpson|I admit it .
+|Homer Simpson|
+First: Gimme	a:1,	
+First: Give	me:1,	
+First: I	put:2,	
+First: It	was:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:1,	
+First: admit	it:1,	
+First: another	.:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: it	.:3,	
+First: me	.:3,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: put	it:1,	
+First: tell	me:1,	
+First: there	.:1,	
+First: was	me:1,	
+ NOUNVERB
+Are
+ PRONOUN
+you
+ ADJECTIVE
+insane
+verbPhrase objectPhrase complementPhrase
+|Homer Simpson|Are you insane .
+|Homer Simpson|
+First: Are	you:1,	
+First: Gimme	a:1,	
+First: Give	me:1,	
+First: I	put:2,	
+First: It	was:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:1,	
+First: admit	it:1,	
+First: another	.:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: insane	.:1,	
+First: it	.:3,	
+First: me	.:3,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: put	it:1,	
+First: tell	me:1,	
+First: there	.:1,	
+First: was	me:1,	
+First: you	insane:1,	
+ PRONOUN
+You
+ CONTRACTION
+wouldn't
+ NOUNVERB
+dare
+subjectPhrase verbPhrase
+|Lisa Simpson|You wouldn't dare .
+|Lisa Simpson|
+First: You	wouldn't:1,	
+First: dare	.:1,	
+First: wouldn't	dare:1,	
+ PRONOUN
+I
+ NOUNVERB
+can
+ ADJECTIVENOUNVERB
+dress
+ADJECTIVENOUNVERB
+ PRONOUN
+myself
+subjectPhrase verbPhrase complementPhrase objectPhrase
+|Grampa Simpson|I can dress myself .
+|Grampa Simpson|
+First: I	can:1,	
+First: can	dress:1,	
+First: dress	myself:1,	
+First: myself	.:1,	
+ PRONOUN
+I
+ NOUNVERB
+can
+ ADJECTIVENOUNVERB
+read
+ADJECTIVENOUNVERB
+subjectPhrase verbPhrase complementPhrase
+|Grampa Simpson|I can read .
+|Grampa Simpson|
+First: I	can:2,	
+First: can	dress:2,	
+First: dress	myself:1,	
+First: myself	.:1,	
+First: read	.:1,	
+ NOUNVERB
+wait
+ ARTICLE
+a
+ ADJECTIVENOUNVERB
+minute
+verbPhrase objectPhrase
+|Homer Simpson|wait a minute .
+|Homer Simpson|
+First: Are	you:1,	
+First: Gimme	a:1,	
+First: Give	me:1,	
+First: I	put:2,	
+First: It	was:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:2,	
+First: admit	it:1,	
+First: another	.:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: insane	.:1,	
+First: it	.:3,	
+First: me	.:3,	
+First: minute	.:1,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: put	it:1,	
+First: tell	me:1,	
+First: there	.:1,	
+First: wait	a:1,	
+First: was	me:1,	
+First: you	insane:1,	
+ PRONOUN
+I
+ NOUNVERB
+guess
+ CONTRACTION
+that's
+ PRONOUN
+it
+subjectPhrase verbPhrase objectPhrase
+|Marge Simpson|I guess that's it .
+|Marge Simpson|
+First: I	guess:1,	
+First: guess	that's:1,	
+First: it	.:1,	
+First: that's	it:1,	
+ CONTRACTION
+Isn't
+ PRONOUN
+it
+ ADJECTIVE
+obvious
+verbPhrase objectPhrase complementPhrase
+|Lisa Simpson|Isn't it obvious .
+|Lisa Simpson|
+First: Isn't	it:1,	
+First: You	wouldn't:1,	
+First: dare	.:1,	
+First: it	obvious:1,	
+First: obvious	.:1,	
+First: wouldn't	dare:1,	
+ NOUNVERB
+Put
+ ADVERB
+that
+ ADJECTIVENOUN
+away
+verbPhrase adverbialPhrase
+|Grampa Simpson|Put that away .
+|Grampa Simpson|
+First: I	can:2,	
+First: Put	that:1,	
+First: away	.:1,	
+First: can	dress:2,	
+First: dress	myself:1,	
+First: myself	.:1,	
+First: read	.:1,	
+First: that	away:1,	
+ CONTRACTION
+I'll
+ NOUNVERB
+show
+ PRONOUN
+you
+verbPhrase objectPhrase
+|Grampa Simpson|I'll show you .
+|Grampa Simpson|
+First: I	can:2,	
+First: I'll	show:1,	
+First: Put	that:1,	
+First: away	.:1,	
+First: can	dress:2,	
+First: dress	myself:1,	
+First: myself	.:1,	
+First: read	.:1,	
+First: show	you:1,	
+First: that	away:1,	
+First: you	.:1,	
+ CONTRACTION
+I'll
+ NOUNVERB
+throw
+ PRONOUN
+it
+ ADJECTIVENOUNVERB
+back
+ADJECTIVENOUNVERB
+verbPhrase objectPhrase complementPhrase
+|Homer Simpson|I'll throw it back .
+|Homer Simpson|
+First: Are	you:1,	
+First: Gimme	a:1,	
+First: Give	me:1,	
+First: I	put:2,	
+First: I'll	throw:1,	
+First: It	was:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:2,	
+First: admit	it:1,	
+First: another	.:1,	
+First: back	.:1,	
+First: banana	.:1,	
+First: can	tell:1,	
+First: insane	.:1,	
+First: it	.:4,	
+First: me	.:3,	
+First: minute	.:1,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: put	it:1,	
+First: tell	me:1,	
+First: there	.:1,	
+First: throw	it:1,	
+First: wait	a:1,	
+First: was	me:1,	
+First: you	insane:1,	
+ PRONOUN
+I
+ NOUNVERB
+stand
+ ADJECTIVE
+corrected
+subjectPhrase verbPhrase complementPhrase
+|Lisa Simpson|I stand corrected .
+|Lisa Simpson|
+First: I	stand:1,	
+First: Isn't	it:1,	
+First: You	wouldn't:1,	
+First: corrected	.:1,	
+First: dare	.:1,	
+First: it	obvious:1,	
+First: obvious	.:1,	
+First: stand	corrected:1,	
+First: wouldn't	dare:1,	
+ PRONOUN
+I
+ NOUNVERB
+stand
+ ADJECTIVE
+corrected
+subjectPhrase verbPhrase complementPhrase
+|DIAMOND JOE|I stand corrected .
+|DIAMOND JOE|
+First: I	stand:1,	
+First: corrected	.:1,	
+First: stand	corrected:1,	
+ NOUNVERB
+Tell
+ PRONOUN
+you
+ ADVERB
+what
+verbPhrase objectPhrase adverbialPhrase
+|Dealer|Tell you what .
+|Dealer|
+First: Tell	you:1,	
+First: what	.:1,	
+First: you	what:1,	
+ ARTICLE
+A
+ ADJECTIVENOUN
+hundred
+ NOUNVERB
+bucks
+subjectPhrase verbPhrase
+|Homer Simpson|A hundred bucks .
+|Homer Simpson|
+First: A	hundred:1,	
+First: Are	you:1,	
+First: Gimme	a:1,	
+First: Give	me:1,	
+First: I	put:2,	
+First: I'll	throw:1,	
+First: It	was:1,	
+First: Think	nothing:1,	
+First: You	can:1,	
+First: a	banana:2,	
+First: admit	it:1,	
+First: another	.:1,	
+First: back	.:1,	
+First: banana	.:1,	
+First: bucks	.:1,	
+First: can	tell:1,	
+First: hundred	bucks:1,	
+First: insane	.:1,	
+First: it	.:4,	
+First: me	.:3,	
+First: minute	.:1,	
+First: nothing	of:1,	
+First: of	it:1,	
+First: put	it:1,	
+First: tell	me:1,	
+First: there	.:1,	
+First: throw	it:1,	
+First: wait	a:1,	
+First: was	me:1,	
+First: you	insane:1,	
+ ADVERBNOUN
+Now
+ NOUNVERB
+are
+ PRONOUN
+you
+ VERB
+gonna
+ NOUNVERB
+stop
+ VERB
+bugging
+ PRONOUN
+me
+adverbialPhrase verbPhrase subjectPhrase verbPhrase objectPhrase
+e .Now are you gonna stop bugging me .
+e .
+First: Now	are:1,	
+First: are	you:1,	
+First: bugging	me:1,	
+First: gonna	stop:1,	
+First: me	.:1,	
+First: stop	bugging:1,	
+First: you	gonna:1,	
+ NOUNVERB
+Get
+ ARTICLE
+a
+ NOUNVERB
+job
+verbPhrase objectPhrase
+|Adult Narrator|Get a job .
+|Adult Narrator|
+First: Get	a:1,	
+First: a	job:1,	
+First: job	.:1,	
+ VERB
+Were
+ PRONOUN
+they
+ ADJECTIVE
+serious
+verbPhrase objectPhrase complementPhrase
+|Adult Narrator|Were they serious .
+|Adult Narrator|
+First: Get	a:1,	
+First: Were	they:1,	
+First: a	job:1,	
+First: job	.:1,	
+First: serious	.:1,	
+First: they	serious:1,	
+ ARTICLE
+A
+ ADJECTIVENOUN
+comic
+ NOUNVERB
+book
+subjectPhrase verbPhrase
+|Mrs. Glick|A comic book .
+|Mrs. Glick|
+First: A	comic:1,	
+First: book	.:1,	
+First: comic	book:1,	
+ NOUN
+Boys
+ NOUNVERB
+love
+ NOUNVERB
+candy
+subjectPhrase verbPhrase
+|Mrs. Glick|Boys love candy .
+|Mrs. Glick|
+First: A	comic:1,	
+First: Boys	love:1,	
+First: book	.:1,	
+First: candy	.:1,	
+First: comic	book:1,	
+First: love	candy:1,	
+ NOUN
+Boys
+ NOUNVERB
+love
+ NOUNVERB
+candy
+subjectPhrase verbPhrase
+|Mrs. Glick|Boys love candy .
+|Mrs. Glick|
+First: A	comic:1,	
+First: Boys	love:2,	
+First: book	.:1,	
+First: candy	.:2,	
+First: comic	book:1,	
+First: love	candy:2,	
+ CONTRACTION
+I'll
+ NOUNVERB
+get
+ ARTICLE
+the
+ NOUN
+iodine
+verbPhrase objectPhrase
+|Mrs. Glick|I'll get the iodine .
+|Mrs. Glick|
+First: A	comic:1,	
+First: Boys	love:2,	
+First: I'll	get:1,	
+First: book	.:1,	
+First: candy	.:2,	
+First: comic	book:1,	
+First: get	the:1,	
+First: iodine	.:1,	
+First: love	candy:2,	
+First: the	iodine:1,	
+ CONTRACTION
+There's
+ ARTICLE
+a
+ NOUNVERB
+reason
+verbPhrase objectPhrase
+|Bart Simpson|There's a reason .
+|Bart Simpson|
+First: I	demand:2,	
+First: There's	a:1,	
+First: You	were:1,	
+First: a	recount:2,	
+First: demand	a:1,	
+First: reason	.:1,	
+First: recount	.:1,	
+First: understand	why:1,	
+First: wasted	.:1,	
+First: were	wasted:1,	
+First: why	.:1,	
+ PRONOUN
+I
+ CONTRACTION
+don't
+ NOUNVERB
+want
+ PRONOUN
+it
+subjectPhrase verbPhrase objectPhrase
+|Milhouse Van Houten|I don't want it .
+|Milhouse Van Houten|
+First: I	don't:1,	
+First: don't	want:1,	
+First: it	.:1,	
+First: want	it:1,	
+ CONTRACTION
+I'm
+ ADJECTIVENOUN
+becoming
+ ADJECTIVE
+radioactive
+verbPhrase complementPhrase
+|Radioactive Man|I'm becoming radioactive .
+|Radioactive Man|
+First: I'm	becoming:1,	
+First: becoming	radioactive:1,	
+First: radioactive	.:1,	
+ ADVERBNOUN
+Now
+ PRONOUN
+you
+ NOUNVERB
+know
+ ADJECTIVENOUNVERB
+better
+ADJECTIVENOUNVERB
+adverbialPhrase subjectPhrase verbPhrase complementPhrase
+|Bart Simpson|Now you know better .
+|Bart Simpson|
+First: I	demand:2,	
+First: Now	you:1,	
+First: There's	a:1,	
+First: You	were:1,	
+First: a	recount:2,	
+First: better	.:1,	
+First: demand	a:1,	
+First: know	better:1,	
+First: reason	.:1,	
+First: recount	.:1,	
+First: understand	why:1,	
+First: wasted	.:1,	
+First: were	wasted:1,	
+First: why	.:1,	
+First: you	know:1,	
+ NOUNVERB
+Wait
+ ARTICLE
+a
+ ADJECTIVENOUNVERB
+minute
+verbPhrase objectPhrase
+|Milhouse Van Houten|Wait a minute .
+|Milhouse Van Houten|
+First: I	don't:1,	
+First: Wait	a:1,	
+First: a	minute:1,	
+First: don't	want:1,	
+First: it	.:1,	
+First: minute	.:1,	
+First: want	it:1,	
+ NOUNVERB
+Wait
+ ARTICLE
+a
+ ADJECTIVENOUNVERB
+minute
+verbPhrase objectPhrase
+|Milhouse Van Houten|Wait a minute .
+|Milhouse Van Houten|
+First: I	don't:1,	
+First: Wait	a:2,	
+First: a	minute:2,	
+First: don't	want:1,	
+First: it	.:1,	
+First: minute	.:2,	
+First: want	it:1,	
+ PRONOUN
+I
+ VERB
+knew
+ PRONOUN
+it
+subjectPhrase verbPhrase objectPhrase
+|Bart Simpson|I knew it .
+|Bart Simpson|
+First: I	demand:3,	
+First: Now	you:1,	
+First: There's	a:1,	
+First: You	were:1,	
+First: a	recount:2,	
+First: better	.:1,	
+First: demand	a:1,	
+First: it	.:1,	
+First: knew	it:1,	
+First: know	better:1,	
+First: reason	.:1,	
+First: recount	.:1,	
+First: understand	why:1,	
+First: wasted	.:1,	
+First: were	wasted:1,	
+First: why	.:1,	
+First: you	know:1,	
+ PRONOUN
+I
+ CONTRACTION
+don't
+ NOUNVERB
+know
+subjectPhrase verbPhrase
+|Martin Prince|I don't know .
+|Martin Prince|
+First: I	don't:1,	
+First: don't	know:1,	
+First: know	.:1,	
+ PRONOUN
+You
+ CONTRACTION
+can't
+ NOUNVERB
+stop
+ PRONOUN
+me
+subjectPhrase verbPhrase objectPhrase
+|Milhouse Van Houten|You can't stop me .
+|Milhouse Van Houten|
+First: I	don't:1,	
+First: Wait	a:2,	
+First: You	can't:1,	
+First: a	minute:2,	
+First: can't	stop:1,	
+First: don't	want:1,	
+First: it	.:1,	
+First: me	.:1,	
+First: minute	.:2,	
+First: stop	me:1,	
+First: want	it:1,	
+ PRONOUN
+You
+ CONTRACTION
+don't
+ NOUNVERB
+want
+ PREPOSITION
+to
+ NOUNVERB
+get
+ ARTICLE
+the
+ NOUNVERB
+sniffles
+subjectPhrase verbPhrase objectPhrase objectPhrase
+|Marge Simpson|You don't want to get the sniffles .
+|Marge Simpson|
