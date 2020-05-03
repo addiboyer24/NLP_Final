@@ -72,7 +72,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 46 "interpreter.y" /* yacc.c:1909  */
+#line 52 "interpreter.y" /* yacc.c:1909  */
 
 
 	int iVal;
