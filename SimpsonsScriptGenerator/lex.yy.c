@@ -890,73 +890,73 @@ YY_RULE_SETUP
                                 yylval.sVal = strdup(yytext);
 
                                 if(isArticle){
-                                    //std::cout << "ARTICLE" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "ARTICLE" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return ARTICLE;
                                 }
                                 else if(isConjunction){
-                                    //std::cout << "CONJUNCTION" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "CONJUNCTION" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return CONJUNCTION;
                                 }
                                 else if(isPronoun){
-                                    //std::cout << "PRONOUN" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "PRONOUN" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return PRONOUN;
                                 }
                                 else if(isContraction){
-                                    //std::cout << "CONTRACTION" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "CONTRACTION" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return CONTRACTION;
                                 }
                                 else if (isAdjective && isNoun && isVerb){
-                                    //std::cout << "ADJECTIVENOUNVERB" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "ADJECTIVENOUNVERB" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return ADJECTIVENOUNVERB;
                                 }
                                 else if(isAdjective && isNoun){
-                                    //std::cout << "ADJECTIVENOUN" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "ADJECTIVENOUN" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return ADJECTIVENOUN;
                                 }
                                 else if(isAdverb && isNoun){
-                                    //std::cout << "ADVERBNOUN" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "ADVERBNOUN" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return ADVERBNOUN;
                                 }
                                 else if(isAdjective && isVerb){
-                                    //std::cout << "ADJECTIVEVERB" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "ADJECTIVEVERB" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return ADJECTIVEVERB;
                                 }
                                 else if(isAdjective){
-                                    //std::cout << "ADJECTIVE" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "ADJECTIVE" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return ADJECTIVE;
                                 }
                                 else if(isNoun && isVerb){
-                                    //std::cout << "NOUNVERB" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "NOUNVERB" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return NOUNVERB;
                                 }
                                 else if(isNoun){
-                                    //std::cout << "NOUN" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "NOUN" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return NOUN;
                                 }
                                 else if(isVerb){
-                                    //std::cout << "VERB" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "VERB" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return VERB;
                                 }
                                 else if(isAdverb){
-                                    //std::cout << "ADVERB" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "ADVERB" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return ADVERB;
                                 }
                                 else if(isPreposition){
-                                    //std::cout << "PREPOSITION" << std::endl;
-                                    //std::cout << yytext << std::endl;
+                                    std::cout << "PREPOSITION" << std::endl;
+                                    std::cout << yytext << std::endl;
                                     return PREPOSITION;
                                 }
                                 else{

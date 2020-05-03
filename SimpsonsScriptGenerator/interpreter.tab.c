@@ -80,14 +80,134 @@
 
 extern "C" int yylex();
 extern "C" int yyparse();
+const char* space = " ";
 
 void yyerror(const char *s);
 
+std::map<std::string, int> characterToLines;
+
 // map to store word progression
-std::map<std::string, std::map<std::string, int>> wordsToNextCount;
+std::map<std::string, std::map<std::string, std::map<std::string, int>>> model;
 
 // stores the previous word
-std::string previousWord;
+//std::string previousWord;
+
+// Function to vectorize sentence into words
+std::vector<char*> vectorizeSentence(char* sentence){
+	std::vector<char*> ret;
+
+	char* token = strtok(sentence, " ");
+	while(token != NULL){
+		ret.push_back(token);
+		token = strtok(NULL, " ");
+	}
+
+	return ret;
+}
+
+void printModelAtCharacter(std::map<std::string, std::map<std::string, std::map<std::string, int>>> &model, std::string character){
+	auto firstToSecondCounts = model.find(character)->second;
+
+	for(auto iter1 = firstToSecondCounts.begin(); iter1 != firstToSecondCounts.end(); iter1++){
+		std::string first = iter1->first;
+		auto secondToCounts = iter1->second;
+		
+		std::cout << "First: " << first << "\t";
+
+		for(auto iter2 = secondToCounts.begin(); iter2 != secondToCounts.end(); iter2++){
+			std::string word = iter2->first;
+			int count = iter2->second;
+			std::cout << word << ":" << count << ",\t";
+		}
+
+		std::cout << std::endl;
+	}
+}
+
+
+std::map<std::string, std::vector<std::string>> getAdditions(char* sentence){
+
+	std::vector<char*> words = vectorizeSentence(sentence);
+
+	std::map<std::string, std::vector<std::string>> ret;
+
+	for(int i = 1; i < words.size(); i++){
+		std::string first(words.at(i-1));
+		std::string second(words.at(i));
+
+		// make a map of word to vector of second words..
+		if(ret.find(first) != ret.end()){
+			ret.find(first)->second.push_back(second);
+		}
+		else{
+			std::vector<std::string> insert = {second};
+			ret.insert(std::make_pair(first, insert));
+		}
+	}
+
+	return ret;
+}
+
+void augmentModel(std::map<std::string, std::map<std::string, std::map<std::string, int>>> &map, std::map<std::string, std::vector<std::string>> additions, std::string character){
+	if(map.find(character) != map.end()){
+		
+		for(auto iter1 = additions.begin(); iter1 != additions.end(); iter1++){
+			std::string first = iter1->first;
+			if(map.find(character)->second.find(first) != map.find(character)->second.end()){
+				for(auto iter2 = map.find(character)->second.find(first)->second.begin(); iter2 != map.find(character)->second.find(first)->second.end(); iter2++){
+					std::string second = iter2->first;
+					if(map.find(character)->second.find(first)->second.find(second) != map.find(character)->second.find(first)->second.end()){
+						map.find(character)->second.find(first)->second.find(second)->second += 1;
+					}
+					else{
+						map.find(character)->second.find(first)->second.insert(std::make_pair(second, 1));
+					}
+				}
+			}
+			else{
+				std::map<std::string, int> secondToCount;
+				for(int i = 0; i < iter1->second.size(); i++){
+					if(secondToCount.find(iter1->second[i]) != secondToCount.end()){
+						secondToCount.find(iter1->second[i])->second += 1;
+					}
+					else{
+						secondToCount.insert(std::make_pair(iter1->second[i], 1));
+					}
+				}
+
+				map.find(character)->second.insert(std::make_pair(first, secondToCount));
+				
+			}
+		}
+	}
+	else{
+		std::map<std::string, std::map<std::string, int>> append;
+		for(auto iter = additions.begin(); iter != additions.end(); iter++){
+			std::string key = iter->first;
+			std::vector<std::string> words = iter->second;
+			std::map<std::string, int> secondToCount;
+
+			for(int i = 0; i < words.size(); i++){
+				if(secondToCount.find(words[i]) != secondToCount.end()){
+					secondToCount.find(words[i])->second += 1;
+				}
+				else{
+					secondToCount.insert(std::make_pair(words[i], 1));
+				}
+			}
+
+			append.insert(std::make_pair(key, secondToCount));
+		}
+
+		map.insert(std::make_pair(character, append));
+	}
+}
+
+void printMap(std::map<std::string, int> &map){
+	for(auto iter = map.begin(); iter != map.end(); iter++){
+		std::cout << iter->first << " " << iter->second << std::endl;
+	}
+}
 
 // Helper function to compare const char * for map iterator
 class StrCompare {
@@ -101,7 +221,7 @@ public:
 std::map<char*, int, StrCompare> var_to_int;
 
 
-#line 105 "interpreter.tab.c" /* yacc.c:339  */
+#line 225 "interpreter.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -163,14 +283,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 52 "interpreter.y" /* yacc.c:355  */
+#line 172 "interpreter.y" /* yacc.c:355  */
 
 
 	int iVal;
 	char* sVal;
 	
 
-#line 174 "interpreter.tab.c" /* yacc.c:355  */
+#line 294 "interpreter.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -187,7 +307,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 191 "interpreter.tab.c" /* yacc.c:358  */
+#line 311 "interpreter.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -486,15 +606,15 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   121,   121,   121,   125,   128,   132,   136,   143,   147,
-     151,   156,   160,   164,   168,   172,   176,   180,   184,   188,
-     192,   196,   200,   204,   208,   212,   216,   220,   224,   228,
-     232,   236,   240,   244,   248,   284,   288,   292,   296,   300,
-     304,   308,   312,   316,   320,   324,   330,   334,   338,   342,
-     346,   350,   354,   365,   373,   377,   381,   385,   393,   397,
-     401,   405,   409,   413,   417,   421,   434,   438,   442,   446,
-     450,   450,   457,   461,   468,   472,   476,   480,   484,   493,
-     497
+       0,   241,   241,   241,   245,   248,   262,   266,   273,   278,
+     282,   287,   291,   297,   301,   305,   309,   313,   317,   321,
+     325,   329,   333,   337,   341,   345,   349,   355,   359,   363,
+     367,   371,   375,   379,   383,   419,   425,   429,   433,   437,
+     441,   445,   449,   453,   457,   461,   467,   472,   476,   483,
+     487,   493,   499,   512,   520,   524,   528,   532,   540,   544,
+     548,   552,   556,   560,   564,   570,   583,   587,   591,   595,
+     599,   599,   606,   610,   617,   623,   627,   631,   635,   644,
+     648
 };
 #endif
 
@@ -1351,625 +1471,656 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 121 "interpreter.y" /* yacc.c:1646  */
+#line 241 "interpreter.y" /* yacc.c:1646  */
     {
 	//std::cout << "sentence EOL quote" << std::endl;
 			 }
-#line 1359 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1479 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 128 "interpreter.y" /* yacc.c:1646  */
+#line 248 "interpreter.y" /* yacc.c:1646  */
     {
 	//std::cout << $1 << " simple" << std::endl;
+	std::cout << (yyvsp[-1].sVal) << (yyvsp[0].sVal) << std::endl;
+	std::string character((yyvsp[-1].sVal));
+	
+
+	auto additions = getAdditions((yyvsp[0].sVal));
+	augmentModel(model, additions, character);
+	printModelAtCharacter(model, character);
+
+
+
 }
-#line 1367 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1497 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 132 "interpreter.y" /* yacc.c:1646  */
+#line 262 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << $1 << " compound" << std::endl;
 	}
-#line 1375 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1505 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 136 "interpreter.y" /* yacc.c:1646  */
+#line 266 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "CHARACTER" << std::endl;
 		// Generate a sentence..
 		std::cout << (yyvsp[0].sVal) << " says something here.." << std::endl;
 	}
-#line 1385 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1515 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 143 "interpreter.y" /* yacc.c:1646  */
+#line 273 "interpreter.y" /* yacc.c:1646  */
     {
-	//std::cout << "sentencePart PUNCTUATION" << std::endl;
+	strcat((yyvsp[-1].sVal), (yyvsp[0].sVal));
+	(yyval.sVal) = (yyvsp[-1].sVal);
 }
-#line 1393 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1524 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 147 "interpreter.y" /* yacc.c:1646  */
+#line 278 "interpreter.y" /* yacc.c:1646  */
     { // e.g. she loves cheese, but i love pie
 	//std::cout << "sentencePart COMMA CONJUNCTION simple" << std::endl;
 }
-#line 1401 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1532 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 151 "interpreter.y" /* yacc.c:1646  */
+#line 282 "interpreter.y" /* yacc.c:1646  */
     { // e.g. 
 		//std::cout << "sentencePart CONJUNCTION COMMA simple" << std::endl;
 	}
-#line 1409 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1540 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 156 "interpreter.y" /* yacc.c:1646  */
+#line 287 "interpreter.y" /* yacc.c:1646  */
     { // SVO, e.g. I love cheese
-	//std::cout << "subjectPhrase verbPhrase objectPhrase" << std::endl;
+	std::cout << "subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1417 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1548 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 160 "interpreter.y" /* yacc.c:1646  */
+#line 291 "interpreter.y" /* yacc.c:1646  */
     { // SV e.g. john conspired
-		//std::cout << "subjectPhrase verbPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase" << std::endl;
+		strcat((yyvsp[-1].sVal), (yyvsp[0].sVal));
+		(yyval.sVal) = (yyvsp[-1].sVal);
 	}
-#line 1425 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1558 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 164 "interpreter.y" /* yacc.c:1646  */
+#line 297 "interpreter.y" /* yacc.c:1646  */
     { // SVA e.g. john conspired shamefully
-		//std::cout << "subjectPhrase verbPhrase adverbialPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase adverbialPhrase" << std::endl;
 	}
-#line 1433 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1566 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 168 "interpreter.y" /* yacc.c:1646  */
+#line 301 "interpreter.y" /* yacc.c:1646  */
     { // SVOO e.g. John gave Jane a present, john made a cup of tea
-		//std::cout << "subjectPhrase verbPhrase objectPhrase objectPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase objectPhrase objectPhrase" << std::endl;
 	}
-#line 1441 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1574 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 172 "interpreter.y" /* yacc.c:1646  */
+#line 305 "interpreter.y" /* yacc.c:1646  */
     { // VO, e.g. call him
-		//std::cout << "verbPhrase objectPhrase" << std::endl;
+		std::cout << "verbPhrase objectPhrase" << std::endl;
 	}
-#line 1449 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1582 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 176 "interpreter.y" /* yacc.c:1646  */
+#line 309 "interpreter.y" /* yacc.c:1646  */
     { // ASVA e.g. soon we wake up
-		//std::cout << "adverbialPhrase subjectPhrase verbPhrase adverbialPhrase" << std::endl;
+		std::cout << "adverbialPhrase subjectPhrase verbPhrase adverbialPhrase" << std::endl;
 	}
-#line 1457 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1590 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 180 "interpreter.y" /* yacc.c:1646  */
+#line 313 "interpreter.y" /* yacc.c:1646  */
     { // SVC, e.g. her mom is so nice
-		//std::cout << "subjectPhrase verbPhrase complementPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase complementPhrase" << std::endl;
 	}
-#line 1465 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1598 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 184 "interpreter.y" /* yacc.c:1646  */
+#line 317 "interpreter.y" /* yacc.c:1646  */
     { // SVCA, e.g. her mom is so nice lately
-		//std::cout << "subjectPhrase verbPhrase complementPhrase adverbialPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase complementPhrase adverbialPhrase" << std::endl;
 	}
-#line 1473 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1606 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 188 "interpreter.y" /* yacc.c:1646  */
+#line 321 "interpreter.y" /* yacc.c:1646  */
     { // ASVO e.g. lately i love cheese
-		//std::cout << "adverbialPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
+		std::cout << "adverbialPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
 	}
-#line 1481 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1614 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 192 "interpreter.y" /* yacc.c:1646  */
+#line 325 "interpreter.y" /* yacc.c:1646  */
     { // SVOC e.g. John made jane angry
-		//std::cout << "subjectPhrase verbPhrase objectPhrase complementPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase objectPhrase complementPhrase" << std::endl;
 	}
-#line 1489 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1622 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 196 "interpreter.y" /* yacc.c:1646  */
+#line 329 "interpreter.y" /* yacc.c:1646  */
     { // SVAO e.g. She went up the stairs
-		//std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase" << std::endl;
 	}
-#line 1497 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1630 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 200 "interpreter.y" /* yacc.c:1646  */
+#line 333 "interpreter.y" /* yacc.c:1646  */
     { // SVOA e.g. it was a little of both
-		//std::cout << "subjectPhrase verbPhrase objectPhrase adverbialPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase objectPhrase adverbialPhrase" << std::endl;
 	}
-#line 1505 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1638 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 204 "interpreter.y" /* yacc.c:1646  */
+#line 337 "interpreter.y" /* yacc.c:1646  */
     { // SVOVO e.g. you think you have it
-		//std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1513 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1646 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 208 "interpreter.y" /* yacc.c:1646  */
+#line 341 "interpreter.y" /* yacc.c:1646  */
     { // SVOVOCA e.g. I don't think there's anything left to say
-		//std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase complementPhrase adverbialPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase complementPhrase adverbialPhrase" << std::endl;
 	}
-#line 1521 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1654 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 212 "interpreter.y" /* yacc.c:1646  */
+#line 345 "interpreter.y" /* yacc.c:1646  */
     { // VC e.g. it's only natural
-		//std::cout << "verbPhrase complementPhrase" << std::endl;
+		std::cout << "verbPhrase complementPhrase" << std::endl;
 	}
-#line 1529 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1662 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 216 "interpreter.y" /* yacc.c:1646  */
+#line 349 "interpreter.y" /* yacc.c:1646  */
     { // AVSVO e.g. what did he teach you?
-		//std::cout << "adverbialPhrase verbPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
+		strcat((yyvsp[-4].sVal), strcat((yyvsp[-3].sVal), strcat((yyvsp[-2].sVal), strcat((yyvsp[-1].sVal), (yyvsp[0].sVal)))));
+		(yyval.sVal) = (yyvsp[-4].sVal);
+		std::cout << "adverbialPhrase verbPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1537 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1672 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 220 "interpreter.y" /* yacc.c:1646  */
+#line 355 "interpreter.y" /* yacc.c:1646  */
     { // VCSVO e.g. I'd sure like to talk to him
-		//std::cout << "verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
+		std::cout << "verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1545 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1680 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 224 "interpreter.y" /* yacc.c:1646  */
+#line 359 "interpreter.y" /* yacc.c:1646  */
     { // VCSVO e.g. Although I'd sure like to talk to him
-		//std::cout << "adverbialPhrase verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
+		std::cout << "adverbialPhrase verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
-#line 1553 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1688 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 228 "interpreter.y" /* yacc.c:1646  */
+#line 363 "interpreter.y" /* yacc.c:1646  */
     { // VOC e.g. are you stupid?
-		//std::cout << "verbPhrase objectPhrase complementPhrase" << std::endl;
+		std::cout << "verbPhrase objectPhrase complementPhrase" << std::endl;
 	}
-#line 1561 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1696 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 232 "interpreter.y" /* yacc.c:1646  */
+#line 367 "interpreter.y" /* yacc.c:1646  */
     {
-		//std::cout << "verbPhrase objectPhrase adverbialPhrase" << std::endl;
+		std::cout << "verbPhrase objectPhrase adverbialPhrase" << std::endl;
 	}
-#line 1569 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1704 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 236 "interpreter.y" /* yacc.c:1646  */
+#line 371 "interpreter.y" /* yacc.c:1646  */
     {
-		//std::cout << "verbPhrase objectPhrase objectPhrase" << std::endl;
+		std::cout << "verbPhrase objectPhrase objectPhrase" << std::endl;
 	}
-#line 1577 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1712 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 240 "interpreter.y" /* yacc.c:1646  */
+#line 375 "interpreter.y" /* yacc.c:1646  */
     { // SVCO e.g. she makes good pie.
-		//std::cout << "subjectPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
 	}
-#line 1585 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1720 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 244 "interpreter.y" /* yacc.c:1646  */
+#line 379 "interpreter.y" /* yacc.c:1646  */
     { // SVAOV i.e. I wonder how he died. 
-		//std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase" << std::endl;
+		std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase" << std::endl;
 	}
-#line 1593 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1728 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 248 "interpreter.y" /* yacc.c:1646  */
+#line 383 "interpreter.y" /* yacc.c:1646  */
     { // e.g. sit down ( you subject is implied)
-		//std::cout << "verbPhrase adverbialPhrase" << std::endl;
+		std::cout << "verbPhrase adverbialPhrase" << std::endl;
 	}
-#line 1601 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1736 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 284 "interpreter.y" /* yacc.c:1646  */
+#line 419 "interpreter.y" /* yacc.c:1646  */
     {
+	strcat((yyvsp[0].sVal), space);
+	(yyval.sVal) = (yyvsp[0].sVal);
 	//std::cout << "PRONOUN" << std::endl;
 }
-#line 1609 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1746 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 288 "interpreter.y" /* yacc.c:1646  */
+#line 425 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "PRONOUN NOUN" << std::endl;
 	}
-#line 1617 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1754 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 292 "interpreter.y" /* yacc.c:1646  */
+#line 429 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "nounPhrase" << std::endl;
 	}
-#line 1625 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1762 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 296 "interpreter.y" /* yacc.c:1646  */
+#line 433 "interpreter.y" /* yacc.c:1646  */
     {
 	//std::cout << "nounPhrase NOUN" << std::endl;
 }
-#line 1633 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1770 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 300 "interpreter.y" /* yacc.c:1646  */
+#line 437 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "nounPhrase ADJECTIVENOUN" << std::endl;
 	}
-#line 1641 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1778 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 304 "interpreter.y" /* yacc.c:1646  */
+#line 441 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "nounPhrase COMMA NOUN" << std::endl;
 	}
-#line 1649 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1786 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 308 "interpreter.y" /* yacc.c:1646  */
+#line 445 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "nounPhrase COMMA PRONOUN" << std::endl;
 	}
-#line 1657 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1794 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 312 "interpreter.y" /* yacc.c:1646  */
+#line 449 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "nounPhrase ARTICLE" << std::endl;
 	}
-#line 1665 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1802 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 316 "interpreter.y" /* yacc.c:1646  */
+#line 453 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "NOUN" << std::endl;
 	}
-#line 1673 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1810 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 320 "interpreter.y" /* yacc.c:1646  */
+#line 457 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ARTICLE" << std::endl;
 	}
-#line 1681 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1818 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 324 "interpreter.y" /* yacc.c:1646  */
+#line 461 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "PREPOSITION" << std::endl;
 	}
-#line 1689 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1826 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 330 "interpreter.y" /* yacc.c:1646  */
+#line 467 "interpreter.y" /* yacc.c:1646  */
     {
+	(yyval.sVal) = (yyvsp[0].sVal);
 	//std::cout << "verbClause" << std::endl;
 }
-#line 1697 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1835 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 334 "interpreter.y" /* yacc.c:1646  */
+#line 472 "interpreter.y" /* yacc.c:1646  */
     {
 	//std::cout << "verbClause VERB" << std::endl;
 }
-#line 1705 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1843 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 338 "interpreter.y" /* yacc.c:1646  */
+#line 476 "interpreter.y" /* yacc.c:1646  */
     {
+		strcat((yyvsp[0].sVal), space);
+		strcat((yyvsp[-1].sVal), (yyvsp[0].sVal));
+		(yyval.sVal) = (yyvsp[-1].sVal);
 		//std::cout << "verbClause NOUNVERB" << std::endl;
 	}
-#line 1713 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1854 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 342 "interpreter.y" /* yacc.c:1646  */
+#line 483 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "verbClause CONTRACTION" << std::endl;
 	}
-#line 1721 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1862 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 346 "interpreter.y" /* yacc.c:1646  */
+#line 487 "interpreter.y" /* yacc.c:1646  */
     {
+		strcat((yyvsp[0].sVal), space);
+		(yyval.sVal) = (yyvsp[0].sVal);
 		//std::cout << "VERB" << std::endl;
 	}
-#line 1729 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1872 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 350 "interpreter.y" /* yacc.c:1646  */
+#line 493 "interpreter.y" /* yacc.c:1646  */
     {
+		strcat((yyvsp[0].sVal), space);
+		(yyval.sVal) = (yyvsp[0].sVal);
 		//std::cout << "CONTRACTION" << std::endl;
 	}
-#line 1737 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1882 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 354 "interpreter.y" /* yacc.c:1646  */
+#line 499 "interpreter.y" /* yacc.c:1646  */
     {
+		strcat((yyvsp[0].sVal), space);
+		(yyval.sVal) = (yyvsp[0].sVal);
 		//std::cout << "NOUNVERB" << std::endl;
 	}
-#line 1745 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1892 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 365 "interpreter.y" /* yacc.c:1646  */
+#line 512 "interpreter.y" /* yacc.c:1646  */
     {
 	//std::cout << "NOUN" << std::endl;
 }
-#line 1753 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1900 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 373 "interpreter.y" /* yacc.c:1646  */
+#line 520 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ARTICLE ADJECTIVENOUN NOUNVERB" << std::endl;
 	}
-#line 1761 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1908 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 377 "interpreter.y" /* yacc.c:1646  */
+#line 524 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ARTICLE ADJECTIVE NOUNVERB" << std::endl;
 	}
-#line 1769 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1916 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 381 "interpreter.y" /* yacc.c:1646  */
+#line 528 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ARTICLE NOUNVERB" << std::endl; 
 	}
-#line 1777 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1924 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 385 "interpreter.y" /* yacc.c:1646  */
+#line 532 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ARTICLE ADVERBNOUN" << std::endl;
 	}
-#line 1785 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1932 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 393 "interpreter.y" /* yacc.c:1646  */
+#line 540 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "PREPOSITION NOUN" << std::endl;
 	}
-#line 1793 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1940 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 397 "interpreter.y" /* yacc.c:1646  */
+#line 544 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "PREPOSITION ARTICLE" << std::endl;
 	}
-#line 1801 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1948 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 401 "interpreter.y" /* yacc.c:1646  */
+#line 548 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "PREPOSITION PRONOUN" << std::endl;
 	}
-#line 1809 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1956 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 405 "interpreter.y" /* yacc.c:1646  */
+#line 552 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "PREPOSITION NOUNVERB" << std::endl;
 	}
-#line 1817 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1964 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 409 "interpreter.y" /* yacc.c:1646  */
+#line 556 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "objectNounClause" << std::endl;
 	}
-#line 1825 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1972 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 413 "interpreter.y" /* yacc.c:1646  */
+#line 560 "interpreter.y" /* yacc.c:1646  */
     {
 	//std::cout << "objectNounClause NOUN" << std::endl;
 }
-#line 1833 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1980 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 417 "interpreter.y" /* yacc.c:1646  */
+#line 564 "interpreter.y" /* yacc.c:1646  */
     {
+		strcat((yyvsp[0].sVal), space);
+		(yyval.sVal) = (yyvsp[0].sVal);
 		//std::cout << "PRONOUN" << std::endl;
 	}
-#line 1841 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1990 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 421 "interpreter.y" /* yacc.c:1646  */
+#line 570 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ARTICLE ADJECTIVENOUNVERB" << std::endl;
 	}
-#line 1849 "interpreter.tab.c" /* yacc.c:1646  */
+#line 1998 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 434 "interpreter.y" /* yacc.c:1646  */
+#line 583 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ADVERB ADJECTIVE" << std::endl; // e.g. so cute
 	}
-#line 1857 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2006 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 438 "interpreter.y" /* yacc.c:1646  */
+#line 587 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ADJECTIVEVERB" << std::endl;
 	}
-#line 1865 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2014 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 442 "interpreter.y" /* yacc.c:1646  */
+#line 591 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "adjectivePhrase" << std::endl;
 	}
-#line 1873 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2022 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 446 "interpreter.y" /* yacc.c:1646  */
+#line 595 "interpreter.y" /* yacc.c:1646  */
     {
 	//std::cout << "adjectivePhrase ADJECTIVE" << std::endl;
 }
-#line 1881 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2030 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 450 "interpreter.y" /* yacc.c:1646  */
+#line 599 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "adjectivePhrase ADJECTIVENOUN" << std::endl;
 	}
-#line 1889 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2038 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 453 "interpreter.y" /* yacc.c:1646  */
+#line 602 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "adjectivePhrase ADJECTIVENOUNVERB" << std::endl;
 	}
-#line 1897 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2046 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 457 "interpreter.y" /* yacc.c:1646  */
+#line 606 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ADJECTIVE" << std::endl;
 	}
-#line 1905 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2054 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 461 "interpreter.y" /* yacc.c:1646  */
+#line 610 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ADJECTIVENOUN" << std::endl;
 	}
-#line 1913 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2062 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 468 "interpreter.y" /* yacc.c:1646  */
+#line 617 "interpreter.y" /* yacc.c:1646  */
     {
+	strcat((yyvsp[0].sVal), space);
+	(yyval.sVal) = (yyvsp[0].sVal);
 	//std::cout << "ADVERB" << std::endl;
 }
-#line 1921 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2072 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 472 "interpreter.y" /* yacc.c:1646  */
+#line 623 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ADVERBNOUN" << std::endl;
 	}
-#line 1929 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2080 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 476 "interpreter.y" /* yacc.c:1646  */
+#line 627 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "PREPOSITION ADJECTIVE" << std::endl;
 	}
-#line 1937 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2088 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 480 "interpreter.y" /* yacc.c:1646  */
+#line 631 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "PREPOSITION ADVERBNOUN" << std::endl;
 	}
-#line 1945 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2096 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 484 "interpreter.y" /* yacc.c:1646  */
+#line 635 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "ADJECTIVENOUNVERB" << std::endl;
 	}
-#line 1953 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2104 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 493 "interpreter.y" /* yacc.c:1646  */
+#line 644 "interpreter.y" /* yacc.c:1646  */
     {
 		//std::cout << "adverbPhrase" << std::endl;
 	}
-#line 1961 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2112 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 497 "interpreter.y" /* yacc.c:1646  */
+#line 648 "interpreter.y" /* yacc.c:1646  */
     {
 	//std::cout << "ADVERB ADJECTIVENOUN" << std::endl;
 }
-#line 1969 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2120 "interpreter.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1973 "interpreter.tab.c" /* yacc.c:1646  */
+#line 2124 "interpreter.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2197,7 +2348,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 505 "interpreter.y" /* yacc.c:1906  */
+#line 656 "interpreter.y" /* yacc.c:1906  */
 
 
 int main(int argc, char **argv) {
