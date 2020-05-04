@@ -32,8 +32,10 @@ void yyerror(const char *s);
 
 std::map<std::string, int> *counts = new std::map<std::string, int>;
 
+char* empty = new char[0];
+
 // map to store word progression
-std::map<std::string, std::map<std::string, std::map<std::string, int>>> model;
+std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model = new std::map<std::string, std::map<std::string, std::map<std::string, int>>>;
 
 // stores the previous word
 //std::string previousWord;
@@ -41,144 +43,143 @@ std::map<std::string, std::map<std::string, std::map<std::string, int>>> model;
 int count = 0;
 // function used to generate small talk script once model is trained..
 void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters){
-	printf("\n\nGenerating small talk with %d lines and %d characters\n", numLines, numCharacters);
-	printf("Model trained on %d lines..\n", count);
-	std::cout << "**THE SIMPSONS SMALL TALK CAST**" << std::endl;
-	for(auto iter = counts->begin(); iter != counts->end(); iter++){
-		if(iter->second >= 100)
-			std::cout << iter->first << ": " << iter->second << std::endl;
-	}
-	std::cout << "*********************************" << std::endl;
 
 }
-// Function to vectorize sentence into words
-std::vector<char*> vectorizeSentence(char* sentence){
-	std::vector<char*> ret;
 
-	char* token = strtok(sentence, " ");
+
+// Gets the newest additions to the Markov chain
+std::map<std::string, std::vector<std::string>>* getNewestAdditions(std::string &phrase){
+	
+	// Parse phrase for individual words..
+	char *cstr = new char[phrase.length() + 1];
+	strcpy(cstr, phrase.c_str());
+	char* token = strtok(cstr, " ");
+
+	std::vector<std::string> *words = new std::vector<std::string>;
 	while(token != NULL){
-		ret.push_back(token);
+		std::string word(token);
+		words->push_back(word);
 		token = strtok(NULL, " ");
 	}
 
-	return ret;
-}
-
-void printModelAtCharacter(std::map<std::string, std::map<std::string, std::map<std::string, int>>> &model, std::string character){
-	std::cout << character << std::endl;
-	auto firstToSecondCounts = model.find(character)->second;
-	
-	for(auto iter1 = firstToSecondCounts.begin(); iter1 != firstToSecondCounts.end(); iter1++){
-		std::string first = iter1->first;
-		auto secondToCounts = iter1->second;
-		
-		std::cout << "First: " << first << "\t";
-
-		for(auto iter2 = secondToCounts.begin(); iter2 != secondToCounts.end(); iter2++){
-			std::string word = iter2->first;
-			int count = iter2->second;
-			std::cout << word << ":" << count << ",\t";
-		}
-
-		std::cout << std::endl;
-	}
-}
-
-void printCast(std::map<std::string, int> *counts){
-	for(auto iter = counts->begin(); iter != counts->end(); iter++){
-		std::cout << iter->first << ": " << iter->second << std::endl;
-	}
-}
-
-std::map<std::string, std::vector<std::string>>* getAdditions(char* sentence){
-
-	std::vector<char*> words = vectorizeSentence(sentence);
-
 	std::map<std::string, std::vector<std::string>> *ret = new std::map<std::string, std::vector<std::string>>;
 
-	for(int i = 1; i < words.size(); i++){
-		std::string first(words.at(i-1));
-		std::string second(words.at(i));
+	for(int i = 1; i < words->size(); i++){
+		std::string first(words->at(i-1));
+		std::string second(words->at(i));
 
-		// make a map of word to vector of second words..
+		// check if first word is a key
 		if(ret->find(first) != ret->end()){
 			ret->find(first)->second.push_back(second);
 		}
 		else{
-			std::vector<std::string> insert = {second};
-			ret->insert(std::make_pair(first, insert));
+			std::vector<std::string> *append = new std::vector<std::string>{second};
+			ret->insert(std::make_pair(first, *(append)));
 		}
 	}
 
+	// return the additions map
 	return ret;
 }
 
-void augmentModel(std::map<std::string, std::map<std::string, std::map<std::string, int>>> &map, std::map<std::string, std::vector<std::string>> additions, std::string character){
+void printModel(std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model){
+	for(auto iter1 = model->begin(); iter1 != model->end(); iter1++){
+		std::string character = iter1->first;
+		std::cout << character << std::endl;
+		auto firstToSecondCount = iter1->second;
 
-	// Character already seen.
-	if(map.find(character) != map.end()){
+		for(auto iter2 = firstToSecondCount.begin(); iter2 != firstToSecondCount.end(); iter2++){
+			std::cout << iter2->first << "-> ";
+			auto secondToCount = iter2->second;
+
+			for(auto iter3 = secondToCount.begin(); iter3 != secondToCount.end(); iter3++){
+				std::cout << iter3->first << ": " << iter3->second << ",\t";
+			}
+			std::cout << std::endl;
+		}
 		
-		// For every new addition
-		for(auto iter1 = additions.begin(); iter1 != additions.end(); iter1++){
-			std::string first = iter1->first;
+	}
+}
+void incorporateAdditions(std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::vector<std::string>> *additions, std::string &character){
 
-			// has seen "first" as the first word.
-			if(map.find(character)->second.find(first) != map.find(character)->second.end()){
-				for(auto iter2 = map.find(character)->second.find(first)->second.begin(); iter2 != map.find(character)->second.find(first)->second.end(); iter2++){
-					std::string second = iter2->first;
+	// check if character is in model
+	if(model->find(character) != model->end()){
 
-					// has seen second before so increment
-					if(map.find(character)->second.find(first)->second.find(second) != map.find(character)->second.find(first)->second.end()){
-						map.find(character)->second.find(first)->second.find(second)->second += 1;
+		// If so for every starting word in additions check to see if that exists in model
+		for(auto iter = additions->begin(); iter != additions->end(); iter++){
+			std::string first(iter->first);
+
+			if(model->find(character)->second.find(first) != model->find(character)->second.end()){
+				for(int i = 0; i < iter->second.size(); i++){
+					std::string second(iter->second[i]);
+					if(model->find(character)->second.find(first)->second.find(second) != model->find(character)->second.find(first)->second.end()){
+						model->find(character)->second.find(first)->second.find(second)->second += 1;
 					}
 					else{
-						map.find(character)->second.find(first)->second.insert(std::make_pair(second, 1));
+						model->find(character)->second.find(first)->second.insert(std::make_pair(second, 1));
 					}
 				}
 			}
 			else{
-				// create a new second to count map
-				std::map<std::string, int> secondToCount;
-				for(int i = 0; i < iter1->second.size(); i++){
-					if(secondToCount.find(iter1->second[i]) != secondToCount.end()){
-						secondToCount.find(iter1->second[i])->second += 1;
+				
+				// create second to counts
+				std::map<std::string, int> *secondToCounts = new std::map<std::string, int>;
+				for(int i = 0; i < iter->second.size(); i++){
+					std::string second(iter->second[i]);
+					if(secondToCounts->find(second) != secondToCounts->end()){
+						secondToCounts->find(second)->second += 1;
 					}
 					else{
-						secondToCount.insert(std::make_pair(iter1->second[i], 1));
+						secondToCounts->insert(std::make_pair(second, 1));
 					}
 				}
 
-				map.find(character)->second.insert(std::make_pair(first, secondToCount));
-				
+				model->find(character)->second.insert(std::make_pair(first, *(secondToCounts)));
 			}
+			
 		}
 	}
-	else{
-		std::map<std::string, std::map<std::string, int>> append;
-		for(auto iter = additions.begin(); iter != additions.end(); iter++){
-			std::string key = iter->first;
-			std::vector<std::string> words = iter->second;
-			std::map<std::string, int> secondToCount;
 
-			for(int i = 0; i < words.size(); i++){
-				if(secondToCount.find(words[i]) != secondToCount.end()){
-					secondToCount.find(words[i])->second += 1;
-				}
-				else{
-					secondToCount.insert(std::make_pair(words[i], 1));
+	else{ // First time we've seen this character..
+		
+		// make first:second:count map!
+		std::map<std::string, std::map<std::string, int>> *append = new std::map<std::string, std::map<std::string, int>>;
+		for(auto iter = additions->begin(); iter != additions->end(); iter++){
+			std::string first(iter->first);
+
+			if(append->find(first) != append->end()){
+				std::vector<std::string> secondWords = iter->second;
+				std::map<std::string, int> secondToCount = append->find(first)->second;
+				for(int i = 0; i < secondWords.size(); i++){
+					std::string second(secondWords[i]);
+					if(secondToCount.find(second) != secondToCount.end()){
+						secondToCount.find(second)->second += 1;
+					}
+					else{
+						secondToCount.insert(std::make_pair(second, 1));
+					}
 				}
 			}
+			else{
+				std::map<std::string, int> *secondToCount = new std::map<std::string, int>;
+				for(int i = 0; i < iter->second.size(); i++){
+					std::string second(iter->second[i]);
+					if(secondToCount->find(second) != secondToCount->end()){
+						secondToCount->find(second)->second += 1;
+					}
+					else{
+						secondToCount->insert(std::make_pair(second, 1));
+					}
+				}
 
-			append.insert(std::make_pair(key, secondToCount));
+				append->insert(std::make_pair(first, *(secondToCount)));
+			}
+			
 		}
 
-		map.insert(std::make_pair(character, append));
-	}
-}
-
-void printMap(std::map<std::string, int> &map){
-	for(auto iter = map.begin(); iter != map.end(); iter++){
-		std::cout << iter->first << " " << iter->second << std::endl;
+		// append the new piece to model.
+		model->insert(std::make_pair(character, *(append)));
+		
 	}
 }
 
@@ -245,7 +246,6 @@ std::map<char*, int, StrCompare> var_to_int;
 %type<sVal> adverbPhrase;
 %type<sVal> verbClause;
 %type<sVal> objectNounClause;
-
 %type<sVal> PUNCTUATION;
 %type<sVal> COMMA;
 %type<sVal> ADJECTIVE;
@@ -271,63 +271,64 @@ std::map<char*, int, StrCompare> var_to_int;
 quote: sentence EOL {
 	//std::cout << "sentence EOL quote" << std::endl;
 	count += 1;
+	$1 = empty;
 			 } quote
 
 	 | /* NULL */
 	 ;
 
 sentence: CHARACTER simple{
-	//std::cout << $1 << " simple" << std::endl;
-	//std::cout << $1 << $2 << std::endl;
+	
+	// Get character, and line they spoke..
 	std::string character($1);
+	std::string phrase($2);
 
-	// keep track of who's talking most..
+	// get the new additions for the Markov chain..
+	auto additions = getNewestAdditions(phrase);
+	
+	// tally the character speaking
 	if(counts->find(character) != counts->end()){
 		counts->find(character)->second += 1;
 	}
 	else{
 		counts->insert(std::make_pair(character, 1));
 	}
-	
-	//auto additions = getAdditions($2);
-	//augmentModel(model, additions, character);
-	//printModelAtCharacter(model, character);
+
+	// incorporate additions to Markov chain
+	incorporateAdditions(model, additions, character);
+
 
 
 
 }
 	|
 	CHARACTER compound{
-		//std::cout << $1 << $2 << std::endl;
+		
+		// Get character, and line they spoke..
 		std::string character($1);
+		std::string phrase($2);
 
-		// keep track of who's talking most..
+		// get the new additions for the Markov chain..
+		auto additions = getNewestAdditions(phrase);
+
+		// tally the character speaking
 		if(counts->find(character) != counts->end()){
-		counts->find(character)->second += 1;
+			counts->find(character)->second += 1;
 		}
 		else{
 			counts->insert(std::make_pair(character, 1));
 		}
 
-		//auto additions = getAdditions($2);
-		//augmentModel(model, additions, character);
-		//printModelAtCharacter(model, character);
-		//std::cout << $1 << " compound" << std::endl;
+		// incorporate additions to Markov chain
+		incorporateAdditions(model, additions, character);
 	}
 	|
 	CHARACTER{
-		//std::cout << "CHARACTER" << std::endl;
-		// Generate a sentence..
-		std::cout << $1 << " says something here.." << std::endl;
-
-		for(auto iter = counts->begin(); iter != counts->end(); iter++){
-			std::cout << iter->first << ": " << iter->second << std::endl;
-		}
-
+		
 	}
 	|
 	CAST{
-		printCast(counts);
+		
 	}
 
 // Simple, Compound, Complex, Compound / Complex
@@ -872,7 +873,12 @@ int main(int argc, char **argv) {
 	
 	yyparse();
 
-	generateSmallTalk(counts, numLines, numCharacters);
+	/*
+	if(argc == 4)
+		generateSmallTalk(counts, numLines, numCharacters);
+	*/
+
+	printModel(model);
 
 
 
