@@ -20,7 +20,7 @@
 
 #ifndef YYINITDEPTH
 
-#define YYINITDEPTH 90000
+#define YYINITDEPTH 150000
 
 #endif
 
@@ -30,7 +30,7 @@ const char* space = " ";
 
 void yyerror(const char *s);
 
-std::map<std::string, int> characterToLines;
+std::map<std::string, int> *counts = new std::map<std::string, int>;
 
 // map to store word progression
 std::map<std::string, std::map<std::string, std::map<std::string, int>>> model;
@@ -38,6 +38,19 @@ std::map<std::string, std::map<std::string, std::map<std::string, int>>> model;
 // stores the previous word
 //std::string previousWord;
 
+int count = 0;
+// function used to generate small talk script once model is trained..
+void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters){
+	printf("\n\nGenerating small talk with %d lines and %d characters\n", numLines, numCharacters);
+	printf("Model trained on %d lines..\n", count);
+	std::cout << "**THE SIMPSONS SMALL TALK CAST**" << std::endl;
+	for(auto iter = counts->begin(); iter != counts->end(); iter++){
+		if(iter->second >= 100)
+			std::cout << iter->first << ": " << iter->second << std::endl;
+	}
+	std::cout << "*********************************" << std::endl;
+
+}
 // Function to vectorize sentence into words
 std::vector<char*> vectorizeSentence(char* sentence){
 	std::vector<char*> ret;
@@ -71,24 +84,29 @@ void printModelAtCharacter(std::map<std::string, std::map<std::string, std::map<
 	}
 }
 
+void printCast(std::map<std::string, int> *counts){
+	for(auto iter = counts->begin(); iter != counts->end(); iter++){
+		std::cout << iter->first << ": " << iter->second << std::endl;
+	}
+}
 
-std::map<std::string, std::vector<std::string>> getAdditions(char* sentence){
+std::map<std::string, std::vector<std::string>>* getAdditions(char* sentence){
 
 	std::vector<char*> words = vectorizeSentence(sentence);
 
-	std::map<std::string, std::vector<std::string>> ret;
+	std::map<std::string, std::vector<std::string>> *ret = new std::map<std::string, std::vector<std::string>>;
 
 	for(int i = 1; i < words.size(); i++){
 		std::string first(words.at(i-1));
 		std::string second(words.at(i));
 
 		// make a map of word to vector of second words..
-		if(ret.find(first) != ret.end()){
-			ret.find(first)->second.push_back(second);
+		if(ret->find(first) != ret->end()){
+			ret->find(first)->second.push_back(second);
 		}
 		else{
 			std::vector<std::string> insert = {second};
-			ret.insert(std::make_pair(first, insert));
+			ret->insert(std::make_pair(first, insert));
 		}
 	}
 
@@ -173,6 +191,7 @@ public:
 };
 
 
+
 std::map<char*, int, StrCompare> var_to_int;
 
 %}
@@ -207,6 +226,7 @@ std::map<char*, int, StrCompare> var_to_int;
 %token CHARACTER;
 %token QWORD;
 %token ADJECTIVENOUNVERB;
+%token CAST;
 
 
 /*** Define return type for grammar rules ***/
@@ -243,12 +263,14 @@ std::map<char*, int, StrCompare> var_to_int;
 %type<sVal> ADVERBNOUN;
 %type<sVal> ADJECTIVENOUNVERB;
 %type<sVal> CHARACTER;
+%type<sVal> CAST;
 
 %%
 
 
 quote: sentence EOL {
 	//std::cout << "sentence EOL quote" << std::endl;
+	count += 1;
 			 } quote
 
 	 | /* NULL */
@@ -256,25 +278,40 @@ quote: sentence EOL {
 
 sentence: CHARACTER simple{
 	//std::cout << $1 << " simple" << std::endl;
-	std::cout << $1 << $2 << std::endl;
+	//std::cout << $1 << $2 << std::endl;
 	std::string character($1);
+
+	// keep track of who's talking most..
+	if(counts->find(character) != counts->end()){
+		counts->find(character)->second += 1;
+	}
+	else{
+		counts->insert(std::make_pair(character, 1));
+	}
 	
-	
-	auto additions = getAdditions($2);
-	augmentModel(model, additions, character);
-	printModelAtCharacter(model, character);
+	//auto additions = getAdditions($2);
+	//augmentModel(model, additions, character);
+	//printModelAtCharacter(model, character);
 
 
 
 }
 	|
 	CHARACTER compound{
-		std::cout << $1 << $2 << std::endl;
+		//std::cout << $1 << $2 << std::endl;
 		std::string character($1);
 
-		auto additions = getAdditions($2);
-		augmentModel(model, additions, character);
-		printModelAtCharacter(model, character);
+		// keep track of who's talking most..
+		if(counts->find(character) != counts->end()){
+		counts->find(character)->second += 1;
+		}
+		else{
+			counts->insert(std::make_pair(character, 1));
+		}
+
+		//auto additions = getAdditions($2);
+		//augmentModel(model, additions, character);
+		//printModelAtCharacter(model, character);
 		//std::cout << $1 << " compound" << std::endl;
 	}
 	|
@@ -282,6 +319,15 @@ sentence: CHARACTER simple{
 		//std::cout << "CHARACTER" << std::endl;
 		// Generate a sentence..
 		std::cout << $1 << " says something here.." << std::endl;
+
+		for(auto iter = counts->begin(); iter != counts->end(); iter++){
+			std::cout << iter->first << ": " << iter->second << std::endl;
+		}
+
+	}
+	|
+	CAST{
+		printCast(counts);
 	}
 
 // Simple, Compound, Complex, Compound / Complex
@@ -310,11 +356,11 @@ compound: sentencePart COMMA CONJUNCTION simple{ // e.g. she loves cheese, but i
 sentencePart: subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
 	strcat($1, strcat($2, $3));
 	$$ = $1;
-	std::cout << "subjectPhrase verbPhrase objectPhrase" << std::endl;
+	//std::cout << "subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase{ // SV e.g. john conspired
-		std::cout << "subjectPhrase verbPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase" << std::endl;
 		strcat($1, $2);
 		$$ = $1;
 	}
@@ -322,140 +368,147 @@ sentencePart: subjectPhrase verbPhrase objectPhrase{ // SVO, e.g. I love cheese
 	subjectPhrase verbPhrase adverbialPhrase{ // SVA e.g. john conspired shamefully
 		strcat($1, strcat($2, $3));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase adverbialPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase adverbialPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase objectPhrase objectPhrase{ // SVOO e.g. John gave Jane a present, john made a cup of tea
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase objectPhrase objectPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase objectPhrase objectPhrase" << std::endl;
 	}
 	|
 	verbPhrase objectPhrase{ // VO, e.g. call him
 		strcat($1, $2);
 		$$ = $1;
-		std::cout << "verbPhrase objectPhrase" << std::endl;
+		//std::cout << "verbPhrase objectPhrase" << std::endl;
+	}
+	|
+	verbPhrase objectPhrase verbPhrase objectPhrase{
+		strcat($1, strcat($2, strcat($3, $4)));
+		$$ = $1;
+		//std::cout << "verbPhrase objectPhrase verbPhrase objectPhrase" << std::endl;
 	}
 	|
 	adverbialPhrase subjectPhrase verbPhrase adverbialPhrase{ // ASVA e.g. soon we wake up
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "adverbialPhrase subjectPhrase verbPhrase adverbialPhrase" << std::endl;
+		//std::cout << "adverbialPhrase subjectPhrase verbPhrase adverbialPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase complementPhrase{ // SVC, e.g. her mom is so nice
 		strcat($1, strcat($2, $3));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase complementPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase complementPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase complementPhrase adverbialPhrase{ // SVCA, e.g. her mom is so nice lately
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase complementPhrase adverbialPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase complementPhrase adverbialPhrase" << std::endl;
 	}
 	|
 	adverbialPhrase subjectPhrase verbPhrase objectPhrase{ // ASVO e.g. lately i love cheese
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "adverbialPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
+		//std::cout << "adverbialPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase objectPhrase complementPhrase{ // SVOC e.g. John made jane angry
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase objectPhrase complementPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase objectPhrase complementPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase adverbialPhrase objectPhrase{ // SVAO e.g. She went up the stairs
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase objectPhrase adverbialPhrase{ // SVOA e.g. it was a little of both
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase objectPhrase adverbialPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase objectPhrase adverbialPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase{ // SVOVO e.g. you think you have it
 		strcat($1, strcat($2, strcat($3, strcat($4, $5))));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase complementPhrase adverbialPhrase{ // SVOVOCA e.g. I don't think there's anything left to say
 		strcat($1, strcat($2, strcat($3, strcat($4, strcat($5, strcat($6, $7))))));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase complementPhrase adverbialPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase objectPhrase verbPhrase objectPhrase complementPhrase adverbialPhrase" << std::endl;
 	}
 	|
 	verbPhrase complementPhrase{ // VC e.g. it's only natural
 		strcat($1, $2);
 		$$ = $1;
-		std::cout << "verbPhrase complementPhrase" << std::endl;
+		//std::cout << "verbPhrase complementPhrase" << std::endl;
 	}
 	|
 	adverbialPhrase verbPhrase subjectPhrase verbPhrase objectPhrase{ // AVSVO e.g. what did he teach you?
 		strcat($1, strcat($2, strcat($3, strcat($4, $5))));
 		$$ = $1;
-		std::cout << "adverbialPhrase verbPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
+		//std::cout << "adverbialPhrase verbPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
 	|
 	verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase{ // VCSVO e.g. I'd sure like to talk to him
 		strcat($1, strcat($2, strcat($3, strcat($4, $5))));
 		$$ = $1;
-		std::cout << "verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
+		//std::cout << "verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
 	|
 	adverbialPhrase verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase{ // VCSVO e.g. Although I'd sure like to talk to him
 		strcat($1, strcat($2, strcat($3, strcat($4, strcat($5, $6)))));
 		$$ = $1;
-		std::cout << "adverbialPhrase verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
+		//std::cout << "adverbialPhrase verbPhrase complementPhrase subjectPhrase verbPhrase objectPhrase" << std::endl;
 	}
 	|
 	verbPhrase objectPhrase complementPhrase{ // VOC e.g. are you stupid?
 		strcat($1, strcat($2, $3));
 		$$ = $1;
-		std::cout << "verbPhrase objectPhrase complementPhrase" << std::endl;
+		//std::cout << "verbPhrase objectPhrase complementPhrase" << std::endl;
 	}
 	|
 	verbPhrase objectPhrase adverbialPhrase{ // VOA e.g. I'll tell you what.
 		strcat($1, strcat($2, $3));
 		$$ = $1;
-		std::cout << "verbPhrase objectPhrase adverbialPhrase" << std::endl;
+		//std::cout << "verbPhrase objectPhrase adverbialPhrase" << std::endl;
 	}
 	|
 	verbPhrase objectPhrase objectPhrase{
 		strcat($1, strcat($2, $3));
 		$$ = $1;
-		std::cout << "verbPhrase objectPhrase objectPhrase" << std::endl;
+		//std::cout << "verbPhrase objectPhrase objectPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase complementPhrase objectPhrase{ // SVCO e.g. she makes good pie.
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase complementPhrase objectPhrase" << std::endl;
 	}
 	|
 	subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase{ // SVAOV i.e. I wonder how he died. 
 		strcat($1, strcat($2, strcat($3, strcat($4, $5))));
 		$$ = $1;
-		std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase" << std::endl;
+		//std::cout << "subjectPhrase verbPhrase adverbialPhrase objectPhrase verbPhrase" << std::endl;
 	}
 	|
 	verbPhrase adverbialPhrase{ // e.g. sit down ( you subject is implied)
 		strcat($1, $2);
 		$$ = $1;
-		std::cout << "verbPhrase adverbialPhrase" << std::endl;
+		//std::cout << "verbPhrase adverbialPhrase" << std::endl;
 	}
 	|
 	adverbialPhrase subjectPhrase verbPhrase complementPhrase{ // ASVO e.g. now you know better.
 		strcat($1, strcat($2, strcat($3, $4)));
 		$$ = $1;
-		std::cout << "adverbialPhrase subjectPhrase verbPhrase complementPhrase" << std::endl;
+		//std::cout << "adverbialPhrase subjectPhrase verbPhrase complementPhrase" << std::endl;
 	}
+	
 	
 	
 
@@ -583,7 +636,7 @@ verbClause: verbClause VERB{
 	ADJECTIVENOUNVERB{
 		strcat($1, space);
 		$$ = $1;
-		std::cout << "ADJECTIVENOUNVERB" << std::endl;
+		//std::cout << "ADJECTIVENOUNVERB" << std::endl;
 	}
 
 	
@@ -745,7 +798,7 @@ adjectivePhrase: adjectivePhrase ADJECTIVE{
 	ADJECTIVENOUNVERB{
 		strcat($1, space);
 		$$ = $1;
-		std::cout << "ADJECTIVENOUNVERB" << std::endl;
+		//std::cout << "ADJECTIVENOUNVERB" << std::endl;
 	}
 	
 	
@@ -802,13 +855,27 @@ int main(int argc, char **argv) {
 
 	std::cout << "Welcome to \"The Simpsons\" Small Talk Generator :)" << std::endl;
 	std::cout << "Created by: Addison Boyer" << std::endl;
+
+	int numLines;
+	int numCharacters;
+
+	if(argc == 4){
+		numLines = std::stoi(argv[2]);
+		numCharacters = std::stoi(argv[3]);
+	}
+
 	extern FILE *yyin;
 	FILE *f;
 	f = fopen(argv[1], "r");
-	if(argc == 2 && f)
+	if(argc == 4 && f)
 		yyin = f;
 	
 	yyparse();
+
+	generateSmallTalk(counts, numLines, numCharacters);
+
+
+
 }
 
 /* Display error messages */

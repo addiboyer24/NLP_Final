@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 6
-#define YY_END_OF_BUFFER 7
+#define YY_NUM_RULES 8
+#define YY_END_OF_BUFFER 9
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -360,10 +360,10 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[14] =
+static const flex_int16_t yy_accept[20] =
     {   0,
-        0,    0,    7,    6,    1,    4,    5,    3,    6,    5,
-        0,    2,    0
+        0,    0,    9,    8,    1,    7,    5,    6,    4,    8,
+        6,    0,    0,    3,    0,    0,    0,    2,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -371,17 +371,17 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    3,    4,    1,    3,    1,    1,    1,    5,    1,
-        1,    1,    1,    6,    3,    7,    1,    3,    3,    3,
-        3,    3,    3,    3,    3,    3,    3,    1,    1,    1,
-        1,    1,    4,    1,    5,    5,    5,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        8,    8,    8,    8,    8,    8,    5,    5,    5,    5,
+        1,    3,    4,    1,    5,    1,    1,    1,    6,    1,
+        1,    1,    1,    7,    5,    8,    1,    5,    5,    5,
+        5,    5,    5,    5,    5,    5,    5,    1,    1,    1,
+        1,    1,    4,    1,    9,    6,   10,    6,    6,    6,
+        6,    6,    6,    6,    6,    6,    6,    6,    6,    6,
+        6,    6,   11,   12,    6,    6,    6,    6,    6,    6,
+       13,   13,   13,   13,   13,   13,    6,    6,    6,    6,
 
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
-        5,    5,    1,    9,    1,    1,    1,    1,    1,    1,
+        6,    6,    6,    6,    6,    6,    6,    6,    6,    6,
+        6,    6,    6,    6,    6,    6,    6,    6,    6,    6,
+        6,    6,    1,   14,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -398,35 +398,42 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[10] =
+static const YY_CHAR yy_meta[15] =
     {   0,
-        1,    1,    2,    1,    3,    1,    2,    4,    1
+        1,    1,    2,    1,    2,    3,    1,    2,    3,    3,
+        3,    3,    4,    1
     } ;
 
-static const flex_int16_t yy_base[16] =
+static const flex_int16_t yy_base[22] =
     {   0,
-        0,    0,   15,   16,   16,   16,    0,   16,    0,    0,
-        5,   16,   16,    7,   10
+        0,    0,   28,   29,   29,   29,   29,    0,   29,   12,
+        0,    4,    6,   29,    5,    9,    3,   29,   29,   21,
+       24
     } ;
 
-static const flex_int16_t yy_def[16] =
+static const flex_int16_t yy_def[22] =
     {   0,
-       13,    1,   13,   13,   13,   13,   14,   13,   15,   14,
-       15,   13,    0,   13,   13
+       19,    1,   19,   19,   19,   19,   19,   20,   19,   21,
+       20,   21,   21,   19,   21,   21,   21,   19,    0,   19,
+       19
     } ;
 
-static const flex_int16_t yy_nxt[26] =
+static const flex_int16_t yy_nxt[44] =
     {   0,
-        4,    5,    4,    6,    7,    8,    6,    7,    9,   10,
-       10,   11,   11,   12,   13,    3,   13,   13,   13,   13,
-       13,   13,   13,   13,   13
+        4,    5,    6,    7,    4,    8,    9,    7,    8,    8,
+        8,    8,    8,   10,   15,   16,   18,   14,   14,   14,
+       17,   13,   14,   11,   11,   12,   12,   19,    3,   19,
+       19,   19,   19,   19,   19,   19,   19,   19,   19,   19,
+       19,   19,   19
     } ;
 
-static const flex_int16_t yy_chk[26] =
+static const flex_int16_t yy_chk[44] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,   14,
-       14,   15,   15,   11,    3,   13,   13,   13,   13,   13,
-       13,   13,   13,   13,   13
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,   13,   15,   17,   12,   15,   13,
+       16,   10,   16,   20,   20,   21,   21,    3,   19,   19,
+       19,   19,   19,   19,   19,   19,   19,   19,   19,   19,
+       19,   19,   19
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -545,7 +552,7 @@ bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToChe
 
 }
 
-#line 550 "lex.yy.c"
+#line 557 "lex.yy.c"
 /***
  Each rule returns a token identifier which is generated by bison
  and is defined in the interpreter.tab.h file. yylval is a union
@@ -555,7 +562,7 @@ bool existsInVector(std::vector<std::string> &listToCheck, std::string wordToChe
 ***/
 /*
 */
-#line 560 "lex.yy.c"
+#line 567 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -776,7 +783,7 @@ YY_DECL
 
 
 
-#line 781 "lex.yy.c"
+#line 788 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -803,13 +810,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 14 )
+				if ( yy_current_state >= 20 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 16 );
+		while ( yy_base[yy_current_state] != 29 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -842,21 +849,26 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 123 "interpreter.l"
-{yylval.sVal = strdup(yytext); /*std::cout << "CHARACTER" << std::endl;*/ return CHARACTER; }
+{yylval.sVal = strdup(yytext); return CAST;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 125 "interpreter.l"
-{yylval.sVal = strdup(yytext); return COMMA; }
+{yylval.sVal = strdup(yytext); /*std::cout << "CHARACTER" << std::endl;*/ return CHARACTER; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 127 "interpreter.l"
-{yylval.sVal = strdup(yytext); return PUNCTUATION; }
+{yylval.sVal = strdup(yytext); return COMMA; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 129 "interpreter.l"
+{yylval.sVal = strdup(yytext); return PUNCTUATION; }
+	YY_BREAK
+case 6:
+YY_RULE_SETUP
+#line 131 "interpreter.l"
 {
                                 // articles first..
                                 bool isArticle = existsInVector(articles, yytext);
@@ -890,73 +902,73 @@ YY_RULE_SETUP
                                 yylval.sVal = strdup(yytext);
 
                                 if(isArticle){
-                                    std::cout << "ARTICLE" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "ARTICLE" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return ARTICLE;
                                 }
                                 else if(isConjunction){
-                                    std::cout << "CONJUNCTION" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "CONJUNCTION" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return CONJUNCTION;
                                 }
                                 else if(isPronoun){
-                                    std::cout << "PRONOUN" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "PRONOUN" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return PRONOUN;
                                 }
                                 else if(isContraction){
-                                    std::cout << "CONTRACTION" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "CONTRACTION" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return CONTRACTION;
                                 }
                                 else if (isAdjective && isNoun && isVerb){
-                                    std::cout << "ADJECTIVENOUNVERB" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "ADJECTIVENOUNVERB" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return ADJECTIVENOUNVERB;
                                 }
                                 else if(isAdjective && isNoun){
-                                    std::cout << "ADJECTIVENOUN" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "ADJECTIVENOUN" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return ADJECTIVENOUN;
                                 }
                                 else if(isAdverb && isNoun){
-                                    std::cout << "ADVERBNOUN" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "ADVERBNOUN" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return ADVERBNOUN;
                                 }
                                 else if(isAdjective && isVerb){
-                                    std::cout << "ADJECTIVEVERB" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "ADJECTIVEVERB" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return ADJECTIVEVERB;
                                 }
                                 else if(isAdjective){
-                                    std::cout << "ADJECTIVE" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "ADJECTIVE" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return ADJECTIVE;
                                 }
                                 else if(isNoun && isVerb){
-                                    std::cout << "NOUNVERB" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "NOUNVERB" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return NOUNVERB;
                                 }
                                 else if(isNoun){
-                                    std::cout << "NOUN" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "NOUN" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return NOUN;
                                 }
                                 else if(isVerb){
-                                    std::cout << "VERB" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "VERB" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return VERB;
                                 }
                                 else if(isAdverb){
-                                    std::cout << "ADVERB" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "ADVERB" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return ADVERB;
                                 }
                                 else if(isPreposition){
-                                    std::cout << "PREPOSITION" << std::endl;
-                                    std::cout << yytext << std::endl;
+                                    //std::cout << "PREPOSITION" << std::endl;
+                                    //std::cout << yytext << std::endl;
                                     return PREPOSITION;
                                 }
                                 else{
@@ -965,12 +977,17 @@ YY_RULE_SETUP
                                 }
                             }
 	YY_BREAK
-case 6:
+case 7:
 YY_RULE_SETUP
 #line 238 "interpreter.l"
+{/*PASS*/}
+	YY_BREAK
+case 8:
+YY_RULE_SETUP
+#line 241 "interpreter.l"
 ECHO;
 	YY_BREAK
-#line 975 "lex.yy.c"
+#line 992 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1267,7 +1284,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 14 )
+			if ( yy_current_state >= 20 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1295,11 +1312,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 14 )
+		if ( yy_current_state >= 20 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 13);
+	yy_is_jam = (yy_current_state == 19);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1975,6 +1992,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 238 "interpreter.l"
+#line 241 "interpreter.l"
 
 
