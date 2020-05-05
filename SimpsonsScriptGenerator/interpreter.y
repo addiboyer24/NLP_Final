@@ -17,6 +17,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <cstdlib>
 
 #ifndef YYINITDEPTH
 
@@ -32,6 +33,8 @@ void yyerror(const char *s);
 
 std::map<std::string, int> *counts = new std::map<std::string, int>;
 
+std::map<std::string, std::map<std::string, int>> *firstWordToCounts = new std::map<std::string, std::map<std::string, int>>;
+
 char* empty = new char[0];
 
 // map to store word progression
@@ -41,14 +44,182 @@ std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model 
 //std::string previousWord;
 
 int count = 0;
-// function used to generate small talk script once model is trained..
-void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters){
+
+// function used to decide which characters will be in the scene
+std::vector<std::string> getSceneCharacters(int numCharacters, std::map<std::string, int> *counts){
+
+	std::vector<std::string> ret;
+	// TODO!! select characters less randomly.
+
+	// Get one completely random character "the wildcard"
+	srand(time(0)); // make random every time for maximum laughs :)
+	//int randCharacter = rand() % counts->size();
+	int i = 0;
+
+	std::vector<std::string> secondary;
+	std::vector<std::string> primary;
+	std::vector<std::string> wild;
+
+	int secondaryCutoff = 50;
+	int primaryCutoff = 100;
+	int wildCutoff = 25;
+
+	// 1/5 wildcard, 1/5 secondary, 3/5 primary.
+
+	for(auto iter = counts->begin(); iter != counts->end(); iter++){
+		if(iter->second >= secondaryCutoff && iter->second <= primaryCutoff)
+			secondary.push_back(iter->first);
+		
+		else if(iter->second >= primaryCutoff)
+			primary.push_back(iter->first);
+		else{
+			if(iter->second > wildCutoff)
+				wild.push_back(iter->first);
+		}
+	}
+
+	int numWildCards = numCharacters / 4;
+	int numSecondary = numCharacters / 4;
+	int numPrimary = (numCharacters / 4) * 2;
+
+	// account for remainder into numSecondary
+	numPrimary += (numCharacters - (numWildCards + numSecondary + numPrimary));
+
+	int randomCharacter;
+	std::string character;
+
+	// Pick wildcards
+	for(int i = 0; i < numWildCards; i++){
+		randomCharacter = rand() % wild.size();
+		character = wild[randomCharacter];
+		wild[randomCharacter] = wild[wild.size()-1];
+		wild.pop_back();
+		ret.push_back(character);
+	}
+
+	// Pick secondary
+	for(int i = 0; i < numSecondary; i++){
+		randomCharacter = rand() % secondary.size();
+		character = secondary[randomCharacter];
+		secondary[randomCharacter] = secondary[secondary.size()-1];
+		secondary.pop_back();
+		ret.push_back(character);
+		
+	}
+
+	// Pick primary
+	for(int i = 0; i < numPrimary; i++){
+		randomCharacter = rand() % primary.size();
+		character = primary[randomCharacter];
+		primary[randomCharacter] = primary[primary.size()-1];
+		primary.pop_back();
+		ret.push_back(character);
+	}
+
+	return ret;
+}
+
+// Function to print the cast of the current script
+void printCast(std::vector<std::string> characters){
+	std::cout << "*****     THE CAST     *****\n" << std::endl;
+	for(int i = 0; i < characters.size(); i++){
+		std::cout << characters[i] << std::endl;
+		std::cout << std::endl;
+	}
+	std::cout << "****************************\n" << std::endl;
+}
+
+std::string pickStartingWord(std::map<std::string, int> firstWordToCounts){
+
+	// TODO!!! come up with strategy to pick starting word
+	std::string ret;
+	int i = 0;
+	int word = rand() % firstWordToCounts.size();
+	
+	for(auto iter = firstWordToCounts.begin(); iter != firstWordToCounts.end(); iter++){
+		if(i == word)
+			ret = iter->first;
+		i+=1;
+	}
+	
+	
+	return ret;
+}
+
+std::string generateCharacterSentence(std::string &character, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts){
+
+	// pick starting word
+	std::string start = pickStartingWord(firstWordToCounts->find(character)->second);
+
+	auto startToWordCounts = model->find(character)->second;
+	
+	int i = 0;
+	int randomWord;
+	std::string current = start;
+	std::string ret;
+	int numWords = 0;
+	while(current != "."){
+		//std::cout << current << std::endl;
+		auto secondToCount = startToWordCounts.find(current)->second;
+
+		randomWord = rand() % secondToCount.size();
+		//std::cout << randomWord << std::endl;
+
+		for(auto iter = secondToCount.begin(); iter != secondToCount.end(); iter++){
+			if(i == randomWord && (iter->first != current)){
+
+				ret += current + " ";
+				current = iter->first;
+				numWords += 1;
+				break;
+
+			}
+			//std::cout << iter->first << " " << iter->second << std::endl;
+		}
+		
+	}
+
+	ret += ".";
+
+	//std::cout << ret << std::endl;
+
+	return ret;
+	
 
 }
 
+// function used to generate small talk script once model is trained..
+void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts){
+
+	// get the characters for the scene, and display them..
+	std::vector<std::string> characters = getSceneCharacters(numCharacters, counts);
+	printCast(characters);
+
+	// make them small talk..
+	int i = 0;
+	int randCharacter;
+	
+	// print out script
+	while(i < numLines){
+		// get a random character
+		randCharacter = rand() % characters.size();
+		// generate a sentence
+		std::string line = generateCharacterSentence(characters[randCharacter], model, firstWordToCounts);
+
+		std::cout << characters[randCharacter] << ": " << line << std::endl;
+		std::cout << std::endl;
+
+		i+=1;
+	}
+	
+
+	
+}
+
+
 
 // Gets the newest additions to the Markov chain
-std::map<std::string, std::vector<std::string>>* getNewestAdditions(std::string &phrase){
+std::map<std::string, std::vector<std::string>>* getNewestAdditions(std::string &phrase, std::map<std::string, std::map<std::string, int>> *firstWordToCounts, std::string &character){
 	
 	// Parse phrase for individual words..
 	char *cstr = new char[phrase.length() + 1];
@@ -63,6 +234,22 @@ std::map<std::string, std::vector<std::string>>* getNewestAdditions(std::string 
 	}
 
 	std::map<std::string, std::vector<std::string>> *ret = new std::map<std::string, std::vector<std::string>>;
+
+	// tally first word..
+	std::string start(words->at(0));
+	if(firstWordToCounts->find(character) != firstWordToCounts->end()){
+		if(firstWordToCounts->find(character)->second.find(start) != firstWordToCounts->find(character)->second.end()){
+			firstWordToCounts->find(character)->second.find(start)->second += 1;
+		}
+		else{
+			firstWordToCounts->find(character)->second.insert(std::make_pair(start, 1));
+		}
+	}
+	else{
+		std::map<std::string, int> *wordToCounts = new std::map<std::string, int>;
+		wordToCounts->insert(std::make_pair(start, 1));
+		firstWordToCounts->insert(std::make_pair(character, *(wordToCounts)));
+	}
 
 	for(int i = 1; i < words->size(); i++){
 		std::string first(words->at(i-1));
@@ -82,7 +269,38 @@ std::map<std::string, std::vector<std::string>>* getNewestAdditions(std::string 
 	return ret;
 }
 
+std::string generateLineForCharacter(std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::string &character){
+
+}
+
+void printModelAtCharacter(std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::string &character, std::map<std::string, std::map<std::string, int>> *firstWordToCounts){
+	
+	printf("First word counts for %s\n", character.c_str());
+	auto wordToCounts = firstWordToCounts->find(character)->second;
+	for(auto iter1 = wordToCounts.begin(); iter1 != wordToCounts.end(); iter1++){
+		std::cout << iter1->first << " " << iter1->second << std::endl;
+	}
+	
+	
+	printf("Markov model for %s\n", character.c_str());
+	auto firstToSecondCount = model->find(character)->second;
+	for(auto iter2 = firstToSecondCount.begin(); iter2 != firstToSecondCount.end(); iter2++){
+			std::cout << iter2->first << "-> ";
+			auto secondToCount = iter2->second;
+
+			for(auto iter3 = secondToCount.begin(); iter3 != secondToCount.end(); iter3++){
+				std::cout << iter3->first << ": " << iter3->second << ",\t";
+			}
+			std::cout << std::endl;
+		}
+	
+
+}
+
 void printModel(std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model){
+
+	int i = 0;
+
 	for(auto iter1 = model->begin(); iter1 != model->end(); iter1++){
 		std::string character = iter1->first;
 		std::cout << character << std::endl;
@@ -97,6 +315,10 @@ void printModel(std::map<std::string, std::map<std::string, std::map<std::string
 			}
 			std::cout << std::endl;
 		}
+		
+		if(i == 5)
+			break;
+		i+=1;
 		
 	}
 }
@@ -284,7 +506,7 @@ sentence: CHARACTER simple{
 	std::string phrase($2);
 
 	// get the new additions for the Markov chain..
-	auto additions = getNewestAdditions(phrase);
+	auto additions = getNewestAdditions(phrase, firstWordToCounts, character);
 	
 	// tally the character speaking
 	if(counts->find(character) != counts->end()){
@@ -309,7 +531,7 @@ sentence: CHARACTER simple{
 		std::string phrase($2);
 
 		// get the new additions for the Markov chain..
-		auto additions = getNewestAdditions(phrase);
+		auto additions = getNewestAdditions(phrase, firstWordToCounts, character);
 
 		// tally the character speaking
 		if(counts->find(character) != counts->end()){
@@ -854,8 +1076,8 @@ adverbPhrase: ADVERB ADJECTIVENOUN{
 
 int main(int argc, char **argv) {
 
-	std::cout << "Welcome to \"The Simpsons\" Small Talk Generator :)" << std::endl;
-	std::cout << "Created by: Addison Boyer" << std::endl;
+	std::cout << "\nWelcome to \"The Simpsons Small Talk\" Generator :)" << std::endl;
+	std::cout << "Created by: Addison Boyer\n" << std::endl;
 
 	int numLines;
 	int numCharacters;
@@ -873,12 +1095,10 @@ int main(int argc, char **argv) {
 	
 	yyparse();
 
-	/*
-	if(argc == 4)
-		generateSmallTalk(counts, numLines, numCharacters);
-	*/
-
-	printModel(model);
+	// Generate script with given parameters..
+	if(argc == 4){
+		generateSmallTalk(counts, numLines, numCharacters, model, firstWordToCounts);
+	}
 
 
 
