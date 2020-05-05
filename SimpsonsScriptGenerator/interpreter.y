@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <map>
 #include <cstdlib>
+#include<bits/stdc++.h>
 
 #ifndef YYINITDEPTH
 
@@ -44,6 +45,22 @@ std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model 
 //std::string previousWord;
 
 int count = 0;
+
+// Deterministic way to get the next word in the chain..
+std::string getHighestProbabilityWord(std::map<std::string, int> &secondToCount){
+	int max = INT_MIN;
+	std::string current;
+
+	for(auto iter = secondToCount.begin(); iter != secondToCount.end(); iter++){
+		if(iter->second > max){
+			max = iter->second;
+			current = iter->first;
+		}
+			
+	}
+
+	return current;
+}
 
 // function used to decide which characters will be in the scene
 std::vector<std::string> getSceneCharacters(int numCharacters, std::map<std::string, int> *counts){
@@ -148,41 +165,35 @@ std::string pickStartingWord(std::map<std::string, int> firstWordToCounts){
 
 std::string generateCharacterSentence(std::string &character, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts){
 
-	// pick starting word
+	// pick starting word randomly
 	std::string start = pickStartingWord(firstWordToCounts->find(character)->second);
 
+	// pick a starting word some other way
+
+	// get first word to second counts map for this character
 	auto startToWordCounts = model->find(character)->second;
 	
-	int i = 0;
-	int randomWord;
 	std::string current = start;
 	std::string ret;
-	int numWords = 0;
+	int numWords = 1;
+	ret += current + " ";
+
 	while(current != "."){
-		//std::cout << current << std::endl;
+		
+		// get second word to counts map..
 		auto secondToCount = startToWordCounts.find(current)->second;
 
-		randomWord = rand() % secondToCount.size();
-		//std::cout << randomWord << std::endl;
-
-		for(auto iter = secondToCount.begin(); iter != secondToCount.end(); iter++){
-			if(i == randomWord && (iter->first != current)){
-
-				ret += current + " ";
-				current = iter->first;
-				numWords += 1;
-				break;
-
-			}
-			//std::cout << iter->first << " " << iter->second << std::endl;
-		}
 		
+		// if deterministic then get highest probability word
+		current = getHighestProbabilityWord(secondToCount);
+		ret += current + " ";
+		numWords += 1;
+
+		// else if not, then get a stochasic weighted choice
+
 	}
 
-	ret += ".";
-
-	//std::cout << ret << std::endl;
-
+	// return the generated phrase
 	return ret;
 	
 
