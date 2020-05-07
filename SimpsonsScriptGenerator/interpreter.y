@@ -344,16 +344,6 @@ std::string getMostSimilarCharacter(std::string &characterToCheck, std::vector<s
 // function used to generate small talk script once model is trained..
 void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts, std::map<std::string, std::map<std::string, int>> *characterToWordCounts){
 
-	
-	// KL Divergence between characters..
-
-	std::string character1 = "|Homer Simpson|";
-	std::string character2 = "|Homer Simpson|";
-	
-	/*
-	float div = getKLDivergence(character1, character2, characterToWordCounts);
-	std::cout << div << std::endl;
-	*/
 
 	// get the characters for the scene, and display them..
 	std::vector<std::string> characters = getSceneCharacters(numCharacters, counts);
