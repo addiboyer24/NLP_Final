@@ -212,6 +212,7 @@ std::string generateCharacterSentence(std::string &character, std::map<std::stri
 	int numWords = 1;
 	int minLength = 3;
 	ret += current + " ";
+	int i = 0;
 
 	while(current != "."){
 		
@@ -229,9 +230,14 @@ std::string generateCharacterSentence(std::string &character, std::map<std::stri
 
 		// append the word to generated sentence
 		ret += current + " ";
+
+		i += 1;
+		// don't want infinite loop
+		if(i >= 100000)
+			break;
 		
 
-
+		//std::cout << "HERE" << std::endl;
 		numWords += 1;
 
 	}
