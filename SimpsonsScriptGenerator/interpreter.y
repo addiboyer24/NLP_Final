@@ -19,6 +19,7 @@
 #include <map>
 #include <cstdlib>
 #include<bits/stdc++.h>
+#include <math.h>
 
 #ifndef YYINITDEPTH
 
@@ -35,6 +36,8 @@ void yyerror(const char *s);
 std::map<std::string, int> *counts = new std::map<std::string, int>;
 
 std::map<std::string, std::map<std::string, int>> *firstWordToCounts = new std::map<std::string, std::map<std::string, int>>;
+
+std::map<std::string, std::map<std::string, int>> *characterToWordCounts = new std::map<std::string, std::map<std::string, int>>;
 
 char* empty = new char[0];
 
@@ -199,8 +202,158 @@ std::string generateCharacterSentence(std::string &character, std::map<std::stri
 
 }
 
+
+float kullbackLeiblerDivergence(std::map<std::string, float> *p, std::map<std::string, float> *q){
+
+	float div = 0.0;
+	float pI;
+	float qI;
+
+	for(auto iter = p->begin(); iter != p->end(); iter++){
+		pI = iter->second;
+		qI = q->find(iter->first)->second;
+
+		div += (pI * log(pI/qI));
+	}
+
+	return div;
+}
+
+
+
+std::map<std::string, float> normalizeMultiset(std::map<std::string, std::map<std::string, int>> *characterToWordCounts, std::string &character){
+	
+	auto multiset = &characterToWordCounts->find(character)->second;
+
+	std::map<std::string, float> *ret = new std::map<std::string, float>;
+	int total = 0;
+	for(auto iter = multiset->begin(); iter != multiset->end(); iter++){
+		total += iter->second;
+		ret->insert(std::make_pair(iter->first, iter->second));
+	}
+
+	// normalize
+	for(auto iter = ret->begin(); iter != ret->end(); iter++){
+		iter->second /= total;
+	}
+
+	/*
+	float tot = 0;
+	for(auto iter = ret->begin(); iter != ret->end(); iter++){
+		tot += iter->second;
+	}
+
+	std::cout << tot << std::endl;
+	*/
+
+	return *(ret);
+
+}
+
+void incrementNormalizeMultiset(std::map<std::string, std::map<std::string, int>> *characterToWordCounts, std::map<std::string, float> *intersectingMultiset, std::string &character){
+	std::map<std::string, int> *ret = new std::map<std::string, int>;
+	auto wordToCounts = characterToWordCounts->find(character)->second;
+
+	int sum = intersectingMultiset->size();
+	for(auto iter = wordToCounts.begin(); iter != wordToCounts.end(); iter++){
+		intersectingMultiset->find(iter->first)->second += 1;
+		sum += 1;
+	}
+
+	//std::cout << sum << std::endl;
+
+	// normalize
+	for(auto iter = intersectingMultiset->begin(); iter != intersectingMultiset->end(); iter++){
+		iter->second /= sum;
+	}
+
+	float tot = 0;
+	for(auto iter = intersectingMultiset->begin(); iter != intersectingMultiset->end(); iter++){
+		tot += iter->second;
+	}
+}
+
+std::map<std::string, float> getIntersectingMultiset(std::map<std::string, std::map<std::string, int>> *characterToWordCounts, std::string &character1, std::string &character2){
+
+	auto wordToCounts1 = characterToWordCounts->find(character1)->second;
+
+	auto wordToCounts2 = characterToWordCounts->find(character2)->second;
+
+	std::map<std::string, float> *ret = new std::map<std::string, float>;
+	
+	
+	for(auto iter = wordToCounts1.begin(); iter != wordToCounts1.end(); iter++){
+		if(ret->find(iter->first) == ret->end()){
+			ret->insert(std::make_pair(iter->first, 1));
+		}
+		
+	}
+
+	for(auto iter = wordToCounts2.begin(); iter != wordToCounts2.end(); iter++){
+		if(ret->find(iter->first) == ret->end()){
+			ret->insert(std::make_pair(iter->first, 1));
+		}
+		
+	}
+
+
+	//std::cout << ret->size() << std::endl;
+
+	return *(ret);
+}
+
+float getKLDivergence(std::string &character1, std::string &character2, std::map<std::string, std::map<std::string, int>> *characterToWordCounts){
+
+	// get normal multiset for p
+	auto p = normalizeMultiset(characterToWordCounts, character1);
+
+	// get pseudocounted multiset for q
+	auto q = getIntersectingMultiset(characterToWordCounts, character1, character2);
+	incrementNormalizeMultiset(characterToWordCounts, &q, character2);
+
+	// calculate kl divergence
+	float div = kullbackLeiblerDivergence(&p, &q);
+
+
+	return div;
+
+}
+
+std::string getMostSimilarCharacter(std::string &characterToCheck, std::vector<std::string> *characters, std::map<std::string, std::map<std::string, int>> *characterToWordCounts){
+	float min = INT_MAX;
+	std::string best;
+	float div;
+	for(int i = 0; i < characters->size(); i++){
+
+		// not the same character as it will be close to 0 KL divergence
+		if(characterToCheck != characters->at(i)){
+			div = getKLDivergence(characterToCheck, characters->at(i), characterToWordCounts);
+		
+			if(div < min){
+				min = div;
+				best = characters->at(i);
+			}
+		}
+		
+	}
+
+	
+	return best;
+}
+
 // function used to generate small talk script once model is trained..
-void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts){
+void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts, std::map<std::string, std::map<std::string, int>> *characterToWordCounts){
+
+	
+	// KL Divergence between characters..
+
+	std::string character1 = "|Homer Simpson|";
+	std::string character2 = "|Homer Simpson|";
+	
+	/*
+	float div = getKLDivergence(character1, character2, characterToWordCounts);
+	std::cout << div << std::endl;
+	*/
 
 	// get the characters for the scene, and display them..
 	std::vector<std::string> characters = getSceneCharacters(numCharacters, counts);
@@ -209,17 +362,33 @@ void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int num
 	// make them small talk..
 	int i = 0;
 	int randCharacter;
-	
-	// print out script
-	while(i < numLines){
-		// get a random character
-		randCharacter = rand() % characters.size();
-		// generate a sentence
-		std::string line = generateCharacterSentence(characters[randCharacter], model, firstWordToCounts);
+	std::string next;
 
-		std::cout << characters[randCharacter] << ": " << line << std::endl;
+	// Start with random character..
+	int randomCharacter = rand() % characters.size();
+	next = characters[randomCharacter];
+	
+	std::string line;
+	// Print out script line by line..
+	while(i < numLines){
+		
+		
+		// generate a sentence
+		line = generateCharacterSentence(next, model, firstWordToCounts);
+
+		std::cout << next << ": " << line << std::endl;
 		std::cout << std::endl;
 
+		// every other time
+		// get next character by picking the one with lowest KL divergence from prev character :)
+		if(i % 2 == 0){
+			next = getMostSimilarCharacter(next, &characters, firstWordToCounts);
+		}
+		else{
+			randomCharacter = rand() % characters.size();
+			next = characters[randomCharacter];
+		}
+		
 		i+=1;
 	}
 	
@@ -230,7 +399,7 @@ void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int num
 
 
 // Gets the newest additions to the Markov chain
-std::map<std::string, std::vector<std::string>>* getNewestAdditions(std::string &phrase, std::map<std::string, std::map<std::string, int>> *firstWordToCounts, std::string &character){
+std::map<std::string, std::vector<std::string>>* getNewestAdditions(std::string &phrase, std::map<std::string, std::map<std::string, int>> *firstWordToCounts, std::string &character, std::map<std::string, std::map<std::string, int>> *characterToWordCounts){
 	
 	// Parse phrase for individual words..
 	char *cstr = new char[phrase.length() + 1];
@@ -242,6 +411,32 @@ std::map<std::string, std::vector<std::string>>* getNewestAdditions(std::string 
 		std::string word(token);
 		words->push_back(word);
 		token = strtok(NULL, " ");
+	}
+
+	// add to character to word counts
+	if(characterToWordCounts->find(character) != characterToWordCounts->end()){
+		for(int i = 0; i < words->size(); i++){
+			if(characterToWordCounts->find(character)->second.find(words->at(i)) != characterToWordCounts->find(character)->second.end()){
+				characterToWordCounts->find(character)->second.find(words->at(i))->second += 1;
+			}
+			else{
+				characterToWordCounts->find(character)->second.insert(std::make_pair(words->at(i), 1));
+			}
+		}
+	}
+	else{
+		// make new dictionary
+		std::map<std::string, int> *wordToCount = new std::map<std::string, int>;
+		for(int i = 0; i < words->size(); i++){
+			if(wordToCount->find(words->at(i)) != wordToCount->end()){
+				wordToCount->find(words->at(i))->second += 1;
+			}
+			else{
+				wordToCount->insert(std::make_pair(words->at(i), 1));
+			}
+		}
+		
+		characterToWordCounts->insert(std::make_pair(character, *(wordToCount)));
 	}
 
 	std::map<std::string, std::vector<std::string>> *ret = new std::map<std::string, std::vector<std::string>>;
@@ -517,7 +712,7 @@ sentence: CHARACTER simple{
 	std::string phrase($2);
 
 	// get the new additions for the Markov chain..
-	auto additions = getNewestAdditions(phrase, firstWordToCounts, character);
+	auto additions = getNewestAdditions(phrase, firstWordToCounts, character, characterToWordCounts);
 	
 	// tally the character speaking
 	if(counts->find(character) != counts->end()){
@@ -542,7 +737,7 @@ sentence: CHARACTER simple{
 		std::string phrase($2);
 
 		// get the new additions for the Markov chain..
-		auto additions = getNewestAdditions(phrase, firstWordToCounts, character);
+		auto additions = getNewestAdditions(phrase, firstWordToCounts, character, characterToWordCounts);
 
 		// tally the character speaking
 		if(counts->find(character) != counts->end()){
@@ -907,7 +1102,7 @@ objectPhrase: ARTICLE NOUN{
 		strcat($2, space);
 		strcat($1, $2);
 		$$ = $1;
-		//std::cout << "ARTICLE NOUNVERB" << std::endl; 
+		//std::cout << "ARTICLE NOUNVERB" << std::endl;
 	}
 	|
 	ARTICLE ADVERBNOUN{
@@ -1108,7 +1303,7 @@ int main(int argc, char **argv) {
 
 	// Generate script with given parameters..
 	if(argc == 4){
-		generateSmallTalk(counts, numLines, numCharacters, model, firstWordToCounts);
+		generateSmallTalk(counts, numLines, numCharacters, model, firstWordToCounts, characterToWordCounts);
 	}
 
 
