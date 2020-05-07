@@ -149,9 +149,33 @@ void printCast(std::vector<std::string> characters){
 	std::cout << "****************************\n" << std::endl;
 }
 
-std::string pickStartingWord(std::map<std::string, int> firstWordToCounts){
+std::string pickWeightedStartingWord(std::map<std::string, int> *firstWordToCounts){
 
-	// TODO!!! come up with strategy to pick starting word
+	int tot = 0;
+	for(auto iter = firstWordToCounts->begin(); iter != firstWordToCounts->end(); iter++){
+		tot += iter->second;
+	}
+
+	// Generate a random number between 1 and tot
+	// Decrement from that number the counts, until rand is < 0.  Larger values have higher probability of doing this.. :)
+
+	int random = (rand() % tot) + 1;
+	std::string ret;
+	for(auto iter = firstWordToCounts->begin(); iter != firstWordToCounts->end(); iter++){
+		random -= iter->second;
+		if(random <= 0){
+			ret = iter->first;
+			break;
+		}
+	}
+
+	return ret;
+	
+}
+
+std::string pickRandomStartingWord(std::map<std::string, int> firstWordToCounts){
+
+	// Just get it randomly..
 	std::string ret;
 	int i = 0;
 	int word = rand() % firstWordToCounts.size();
@@ -166,12 +190,19 @@ std::string pickStartingWord(std::map<std::string, int> firstWordToCounts){
 	return ret;
 }
 
-std::string generateCharacterSentence(std::string &character, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts){
+std::string generateCharacterSentence(std::string &character, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts, bool isStochastic){
 
-	// pick starting word randomly
-	std::string start = pickStartingWord(firstWordToCounts->find(character)->second);
+	std::string start;
 
-	// pick a starting word some other way
+	if(!isStochastic){
+		// pick starting word randomly
+		start = pickRandomStartingWord(firstWordToCounts->find(character)->second);
+	}
+	else{
+		// pick a starting word some other way
+		start = pickWeightedStartingWord(&firstWordToCounts->find(character)->second);
+	}
+
 
 	// get first word to second counts map for this character
 	auto startToWordCounts = model->find(character)->second;
@@ -179,6 +210,7 @@ std::string generateCharacterSentence(std::string &character, std::map<std::stri
 	std::string current = start;
 	std::string ret;
 	int numWords = 1;
+	int minLength = 3;
 	ret += current + " ";
 
 	while(current != "."){
@@ -186,13 +218,21 @@ std::string generateCharacterSentence(std::string &character, std::map<std::stri
 		// get second word to counts map..
 		auto secondToCount = startToWordCounts.find(current)->second;
 
-		
-		// if deterministic then get highest probability word
-		current = getHighestProbabilityWord(secondToCount);
-		ret += current + " ";
-		numWords += 1;
+		if(!isStochastic){
+			// if deterministic then get highest probability next word
+			current = getHighestProbabilityWord(secondToCount);
+		}
+		else{
+			// else, get a stochastic weighted choice for next word
+			current = pickWeightedStartingWord(&secondToCount);
+		}
 
-		// else if not, then get a stochasic weighted choice
+		// append the word to generated sentence
+		ret += current + " ";
+		
+
+
+		numWords += 1;
 
 	}
 
@@ -249,6 +289,7 @@ std::map<std::string, float> normalizeMultiset(std::map<std::string, std::map<st
 	return *(ret);
 
 }
+
 
 void incrementNormalizeMultiset(std::map<std::string, std::map<std::string, int>> *characterToWordCounts, std::map<std::string, float> *intersectingMultiset, std::string &character){
 	std::map<std::string, int> *ret = new std::map<std::string, int>;
@@ -319,6 +360,22 @@ float getKLDivergence(std::string &character1, std::string &character2, std::map
 
 }
 
+void printScript(std::vector<std::string> *lines, std::set<std::string> *characters){
+
+	std::cout << "*****     THE CAST     *****\n" << std::endl;
+	for(auto iter = characters->begin(); iter != characters->end(); iter++){
+		std::cout << (*iter) << std::endl;
+		std::cout << std::endl;
+	}
+	std::cout << "****************************\n" << std::endl;
+
+
+	for(int i = 0; i < lines->size(); i++){
+		std::cout << lines->at(i) << std::endl;
+		std::cout << std::endl;
+	}
+}
+
 std::string getMostSimilarCharacter(std::string &characterToCheck, std::vector<std::string> *characters, std::map<std::string, std::map<std::string, int>> *characterToWordCounts){
 	float min = INT_MAX;
 	std::string best;
@@ -342,12 +399,11 @@ std::string getMostSimilarCharacter(std::string &characterToCheck, std::vector<s
 }
 
 // function used to generate small talk script once model is trained..
-void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts, std::map<std::string, std::map<std::string, int>> *characterToWordCounts){
+void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int numCharacters, std::map<std::string, std::map<std::string, std::map<std::string, int>>> *model, std::map<std::string, std::map<std::string, int>> *firstWordToCounts, std::map<std::string, std::map<std::string, int>> *characterToWordCounts, bool isStochastic){
 
 
 	// get the characters for the scene, and display them..
 	std::vector<std::string> characters = getSceneCharacters(numCharacters, counts);
-	printCast(characters);
 
 	// make them small talk..
 	int i = 0;
@@ -358,16 +414,19 @@ void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int num
 	int randomCharacter = rand() % characters.size();
 	next = characters[randomCharacter];
 	
+	std::set<std::string> talked;
+	std::vector<std::string> lines;
 	std::string line;
 	// Print out script line by line..
 	while(i < numLines){
 		
 		
 		// generate a sentence
-		line = generateCharacterSentence(next, model, firstWordToCounts);
+		line = generateCharacterSentence(next, model, firstWordToCounts, isStochastic);
 
-		std::cout << next << ": " << line << std::endl;
-		std::cout << std::endl;
+		lines.push_back(next + ": " + line);
+		//std::cout << next << ": " << line << std::endl;
+		//std::cout << std::endl;
 
 		// every other time
 		// get next character by picking the one with lowest KL divergence from prev character :)
@@ -378,9 +437,15 @@ void generateSmallTalk(std::map<std::string, int> *counts, int numLines, int num
 			randomCharacter = rand() % characters.size();
 			next = characters[randomCharacter];
 		}
+
+		// keep track of who's talked for the cast.
+		talked.insert(next);
 		
 		i+=1;
 	}
+
+	// Print the script just generated with the Markov chain..
+	printScript(&lines, &talked);
 	
 
 	
@@ -1277,23 +1342,25 @@ int main(int argc, char **argv) {
 
 	int numLines;
 	int numCharacters;
+	bool isStochastic;
 
-	if(argc == 4){
+	if(argc == 5){
 		numLines = std::stoi(argv[2]);
 		numCharacters = std::stoi(argv[3]);
+		isStochastic = (bool)std::stoi(argv[4]);
 	}
 
 	extern FILE *yyin;
 	FILE *f;
 	f = fopen(argv[1], "r");
-	if(argc == 4 && f)
+	if(argc == 5 && f)
 		yyin = f;
 	
 	yyparse();
 
 	// Generate script with given parameters..
-	if(argc == 4){
-		generateSmallTalk(counts, numLines, numCharacters, model, firstWordToCounts, characterToWordCounts);
+	if(argc == 5){
+		generateSmallTalk(counts, numLines, numCharacters, model, firstWordToCounts, characterToWordCounts, isStochastic);
 	}
 
 
